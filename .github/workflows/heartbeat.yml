@@ -1,0 +1,59 @@
+name: heartbeat
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+    inputs:
+      test_alert:
+        description: "Arm a test alert 0.1% from the price first (milestone 1 acceptance)"
+        type: choice
+        options: [none, below, above]
+        default: none
+      dry_run:
+        description: "Print messages instead of sending them, write nothing"
+        type: boolean
+        default: false
+
+concurrency:
+  group: heartbeat
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  heartbeat:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -q -r requirements.txt
+
+      - name: Arm test alert
+        if: github.event_name == 'workflow_dispatch' && inputs.test_alert != 'none'
+        env:
+          DIRECTION: ${{ inputs.test_alert }}
+        run: python -m src.test_alert --direction "$DIRECTION"
+
+      # Never echo these. GitHub masks secrets in logs, and the code never
+      # prints the token, the chat id or a Telegram payload either.
+      - name: Heartbeat
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          CMC_API_KEY: ${{ secrets.CMC_API_KEY }}
+          HEARTBEAT_DRY_RUN: ${{ inputs.dry_run && '1' || '' }}
+        run: python -m src.heartbeat --summary-file "$RUNNER_TEMP/commit-msg"
+
+      # Runs even when the heartbeat step failed (e.g. Telegram unreachable),
+      # so alerts that did get through are still recorded as fired.
+      - name: Commit state
+        if: ${{ !cancelled() && !inputs.dry_run }}
+        run: scripts/commit-state.sh "$RUNNER_TEMP/commit-msg"

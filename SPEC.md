@@ -75,7 +75,7 @@ The bot must **only** act on messages from `TELEGRAM_CHAT_ID`. Anything else is 
 
 - `direction`: `below` fires when any 1-minute candle **low** since `armed_at` is `<= level`; `above` when any **high** is `>= level`.
 - `kind`: `action` (loud Telegram notification, buttons "Done" / "Not done") or `watch` (silent notification, no buttons).
-- `status`: `armed` → `fired` → (`done` | `skipped`), or `disabled`. An alert fires **once**. Re-arming means Claude writes it again with a new `armed_at`.
+- `status`: `armed` → `fired` → (`done` | `skipped`), or `disabled`. An alert fires **once**. Re-arming means Claude writes it again with a new `armed_at`. An action alert hit during quiet hours becomes `held` (see Quiet hours).
 - `valid_from` / `valid_until`: time gate (UTC). Outside it, a firing is reported as "level touched, but NOT authorised now" and the alert stays armed. Used for the rule "no new entry before a tier-one print".
 - `guard_band`: `[low, high]` for entry alerts. The message includes the current price and says plainly "only buy if Kraken shows between X and Y; below X do NOT buy".
 - `on_done`: what happens when Nuno presses **Done** or reports the trade. E.g. T1 done arms the breakeven exit and disarms the original exit. Follow-ups are armed only on his confirmation, never automatically on the price alone.
@@ -103,6 +103,7 @@ Written by `snapshot.py`. For each of BTC, ETH, LINK, BCH, DOGE, SHIB, in USD an
 ## Telegram
 
 - Outbound via `sendMessage` (HTML parse mode). Action alerts: loud, with an inline keyboard (Done / Not done). Watch alerts: `disable_notification: true`.
+- **Quiet hours, 22:30 to 06:30 Lisbon** (Nuno, 2 Oct 2026). No action message is sent in that window. The alert becomes `held` (`held_at`, `held_first_touch_at`) and Nuno is assumed **not** to have acted. The first run from 06:30 re-checks every held action, plus any action alert first touched overnight that no run saw: each is armed again with `armed_at` = 06:30 and `held_overnight` recorded. Nuno gets one "Morning update" listing them; an action whose price is still through its level at the re-check is sent right after it as a normal action message, otherwise it stays armed and the daily brief re-plans. Watch alerts and "not authorised" notes still go out at night (they are silent); outage and alerts-file messages are sent silently at night.
 - Inbound by polling `getUpdates` with an `offset` at the start of each heartbeat run (no webhook needed). Store the last `update_id` in `state/telegram_offset.json`.
 - Commands (also accept plain text, e.g. "Bought 420$ at 84065$"):
   - `/bought <usd> at <price_usd>` (optionally `<asset>`, default BTC)
@@ -152,4 +153,4 @@ Later, not now: event checks after tier-one prints (a scheduled Claude task at ~
 
 - Brief time after 25 Oct (07:00 or 08:00 Lisbon)?
 - Should watch alerts go to Telegram at all, or only into the next brief?
-- Quiet hours for watch alerts (action alerts always go through)?
+- ~~Quiet hours~~ Answered 2 Oct 2026: no action messages 22:30 to 06:30 Lisbon, re-check at 06:30 (see Telegram).

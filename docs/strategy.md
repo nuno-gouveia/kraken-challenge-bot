@@ -82,6 +82,7 @@ Balance touches **$975**: stop trading, reassess, drop to 1% risk for the next t
 - **Change targets when the levels force it, not when they merely permit it.** A stable alert set is worth more to someone acting from a phone.
 - **A level is a hypothesis until tested, a fact once defended, and back to a hypothesis once broken.** One rejection does not make a seller.
 - **If a target alert fires and Nuno sees it late, sell at market on sight.** Do not wait for the level to come back.
+- **Quiet hours, 22:30 to 06:30 Lisbon (Nuno, 2 Oct 2026).** No action is sent in that window and Nuno is assumed not to act on anything due then. At 06:30 every such action is re-checked against the price: still through its level, he gets the action then; back on the other side, no action, the alert stays armed and the brief re-plans.
 - **Breadth matters:** a BTC rally with the other five names flat or down is weak evidence. Read breadth over several days.
 - **One session does not vindicate or refute a multi-day call.** Check whether a move stayed before calling it news.
 
