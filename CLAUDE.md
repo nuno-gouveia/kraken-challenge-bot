@@ -12,11 +12,11 @@ This repo replaces a setup where Claude wrote daily emails and Nuno typed price 
 
 ## Build status
 
-Nothing is built yet beyond this documentation and the seed state. **If `src/` does not exist, start at Milestone 1 in `SPEC.md`.** Update this section as milestones land.
+Milestone 1 is built and tested offline; next is Milestone 2 in `SPEC.md`. Update this section as milestones land.
 
 | Milestone | Status |
 |---|---|
-| 1. Heartbeat: Kraken price + alert check + Telegram send | not started |
+| 1. Heartbeat: Kraken price + alert check + Telegram send | built (`src/`, `heartbeat.yml`, 30 tests). Acceptance pending: a live test alert reaching Nuno on Telegram |
 | 2. Telegram inbound: `/bought`, `/sold`, `/status`, `/alerts` | not started |
 | 3. Market snapshot job (indicators from Kraken OHLC) | not started |
 | 4. Daily brief as a scheduled Claude Code task | not started |
@@ -29,6 +29,7 @@ Nothing is built yet beyond this documentation and the seed state. **If `src/` d
 | `state/account.json` | Balance, cash, open positions. **The single source of truth for the account.** | Heartbeat (from Telegram reports), Claude (only when Nuno states a correction) |
 | `state/alerts.json` | Every live alert, its level, direction and the action text Nuno receives | Claude (daily brief), heartbeat (marks alerts fired) |
 | `state/inbox.jsonl` | Every Telegram message from Nuno, appended verbatim with a timestamp | Heartbeat |
+| `state/heartbeat.json` | Price-feed failure count, whether the outage message went out, alert-file problems already reported | Heartbeat |
 | `data/snapshot.json` | Latest market snapshot and indicators, computed from Kraken OHLC | Snapshot job |
 | `analyses/YYYY-MM-DD-brief.md` | The daily brief, as sent | Claude |
 | `docs/strategy.md` | The trading rules and risk framework agreed with Nuno | Claude, only with Nuno's agreement |
@@ -50,6 +51,14 @@ Nothing is built yet beyond this documentation and the seed state. **If `src/` d
 - EUR alert levels are rounded to the nearest EUR 50.
 - Commits from automation use a clear prefix: `heartbeat:`, `brief:`, `snapshot:`, `telegram:`.
 - Anything that writes to `state/` must `git pull --rebase` and retry on push conflict, because the heartbeat and the daily brief can both commit within minutes of each other.
+
+## Running the heartbeat
+
+- Tests: `pip install -r requirements-dev.txt && python -m pytest -q`. Kraken fixtures live in `tests/fixtures/` (regenerate with `python tests/fixtures/make_fixtures.py`).
+- Local dry run (prints messages, writes nothing): `python -m src.heartbeat --dry-run`. Needs Kraken, which Claude's cloud sessions can't reach.
+- On GitHub: Actions > heartbeat > Run workflow. `test_alert: below|above` arms a test alert 0.1% from the price (milestone 1 acceptance); `dry_run` sends nothing and commits nothing.
+- An alert fires once: the heartbeat sets `status: "fired"`, `fired_at`, `fired_source` (`kraken` or `cmc`). An alert touched outside `valid_from`/`valid_until` gets one "NOT authorised now" note and `gate_notified_at`, and stays armed. An armed alert without `armed_at` is armed from the next run.
+- Until Milestone 2, action messages tell Nuno to report fills in the usual chat; there are no Done/Not done buttons yet.
 
 ## History
 
