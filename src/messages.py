@@ -9,7 +9,7 @@ from datetime import datetime
 from html import escape as _escape
 from zoneinfo import ZoneInfo
 
-from src.alerts import Hit, parse_ts
+from src.alerts import Hit, pair_asset, parse_ts, trade_of
 from src.kraken import Candle
 
 LISBON = ZoneInfo("Europe/Lisbon")
@@ -20,17 +20,23 @@ def escape(text: str) -> str:
     return _escape(text, quote=False)
 
 NFA = "Not financial advice."
-# Milestone 2 replaces this with the Done / Not done buttons and /sold.
-CONFIRM_HINT = "Once you've acted, report it in the usual chat with Claude (replies to this bot are not wired up yet)."
+CONFIRM_HINTS = {
+    "buy": "Tap Done once you've bought, or send /bought &lt;usd&gt; at &lt;price&gt;.",
+    "sell_all": "Tap Done once you've sold, or send /sold all at &lt;price&gt;.",
+    "sell_half": "Tap Done once you've sold half, or send /sold half at &lt;price&gt;.",
+    "none": "Tap Done once you've acted.",
+}
+
+
+def buttons(alert_id: str) -> dict:
+    return {"inline_keyboard": [[
+        {"text": "Done", "callback_data": f"done:{alert_id}"},
+        {"text": "Not done", "callback_data": f"skip:{alert_id}"},
+    ]]}
 SLIPPAGE = 0.003  # docs/strategy.md: assume 0.3% on an exit
 LATE_AFTER_S = 600
 
-ASSETS = {"XBT": "BTC", "XDG": "DOGE"}
-
-
-def asset(pair: str) -> str:
-    base = pair[:-3]
-    return ASSETS.get(base, base)
+asset = pair_asset
 
 
 def num(x: float) -> str:
@@ -148,7 +154,7 @@ def alert_message(hit: Hit, prices, account: dict | None, now: float, overnight_
 
     if action:
         lines.extend(position_lines(account, name, usd_price(prices, pair)))
-        lines.append(CONFIRM_HINT)
+        lines.append(CONFIRM_HINTS[trade_of(a)])
     lines.append(NFA)
     return "\n".join(lines)
 

@@ -67,24 +67,46 @@ class FakeKraken:
 
 
 class FakeNotifier:
-    def __init__(self, ok=True):
-        self.sent = []
+    """Stands in for heartbeat.Notifier: records what would be sent and serves
+    queued Telegram updates."""
+
+    chat_id = "4242"
+
+    def __init__(self, ok=True, updates=None):
+        self.sent = []  # (text, silent)
+        self.markups = []  # reply_markup per sent message
+        self.answers = []
+        self.removed = []
+        self.offsets = []
+        self.pending = list(updates or [])
         self.ok = ok
         self.failed = False
 
-    def send(self, text, silent=False):
+    def send(self, text, silent=False, reply_markup=None):
         if not self.ok:
             self.failed = True
             return False
         self.sent.append((text, silent))
+        self.markups.append(reply_markup)
         return True
+
+    def updates(self, offset):
+        self.offsets.append(offset)
+        out = [u for u in self.pending if offset is None or u["update_id"] >= offset]
+        return out
+
+    def answer(self, callback_id, text):
+        self.answers.append(text)
+
+    def remove_buttons(self, chat_id, message_id):
+        self.removed.append(message_id)
 
 
 @pytest.fixture
 def state(tmp_path):
-    """A copy of the repo's seed state/ to run heartbeats against."""
+    """A copy of the seed state (tests/fixtures/state, as first committed) to run heartbeats against."""
     d = tmp_path / "state"
-    shutil.copytree(ROOT / "state", d)
+    shutil.copytree(FIXTURES / "state", d)
     return d
 
 

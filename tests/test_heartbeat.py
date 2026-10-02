@@ -16,7 +16,18 @@ def run(state, session=None, notifier=None, now=NOW, cmc_key=None, write_state=T
     )
     for text, _ in notifier.sent:
         assert EM_DASH not in text
+        assert_telegram_html(text)
     return notifier, summary
+
+
+def assert_telegram_html(text):
+    """Telegram rejects the whole message on a stray '<' or '&' in HTML mode."""
+    import re
+
+    stripped = re.sub(r"</?b>", "", text)
+    stripped = re.sub(r"&(lt|gt|amp|quot);", "", stripped)
+    assert "<" not in stripped and ">" not in stripped and "&" not in stripped, text
+    assert text.count("<b>") == text.count("</b>"), text
 
 
 def rearm(state, at="2026-10-03T08:00:00Z", **changes):
