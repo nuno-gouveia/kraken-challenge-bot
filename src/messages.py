@@ -108,7 +108,7 @@ def position_lines(account: dict | None, name: str, usd_now: float) -> list[str]
     return lines
 
 
-def alert_message(hit: Hit, prices, account: dict | None, now: float) -> str:
+def alert_message(hit: Hit, prices, account: dict | None, now: float, overnight_at: float | None = None) -> str:
     a = hit.alert
     pair, quote, name = a["pair"], a["pair"][-3:], asset(a["pair"])
     rate = prices.eur_usd
@@ -122,6 +122,11 @@ def alert_message(hit: Hit, prices, account: dict | None, now: float) -> str:
     if prices.source == "kraken":
         touched += f"; {'low' if below else 'high'} since then {money(hit.extreme, quote)}"
     lines.append(f"{touched}. (Alert {escape(a['id'])})")
+    if overnight_at is not None:
+        lines.append(
+            f"Held overnight: first touched at {lisbon(overnight_at, now)} (quiet hours), "
+            "and still through the level at the 06:30 re-check."
+        )
     lines.append(f"Now: {both(prices.last[pair], quote, rate)} ({source_note(prices)}).")
 
     band = a.get("guard_band")
@@ -166,6 +171,40 @@ def gate_message(hit: Hit, prices, now: float) -> str:
         f"Now: {both(prices.last[pair], quote, prices.eur_usd)} ({source_note(prices)}).",
         NFA,
     ])
+
+
+def morning_message(entries: list[tuple[dict, float, float, bool]], prices, now: float) -> str:
+    """One update at 06:30 for actions held overnight.
+
+    entries: (alert, first touch time, overnight extreme, still through the level now)
+    """
+    lines = [
+        "<b>Morning update: actions held overnight (quiet hours 22:30 to 06:30 Lisbon).</b>",
+        "I assumed you did nothing overnight, and re-checked each one at 06:30:",
+    ]
+    for a, first_at, extreme, still in entries:
+        quote = a["pair"][-3:]
+        below = a["direction"] == "below"
+        lines.append("")
+        lines.append(f"<b>{escape(a['message'])}</b> (alert {escape(a['id'])})")
+        lines.append(
+            f"Level {both(a['level'], quote, prices.eur_usd)}, first touched at {lisbon(first_at, now)}; "
+            f"{'low' if below else 'high'} overnight {money(extreme, quote)}."
+        )
+        if still:
+            lines.append(f"Still {'below' if below else 'above'} the level: <b>the action stands</b>, see the next message.")
+        else:
+            lines.append(
+                f"Back {'above' if below else 'below'} the level now: no action. "
+                "The alert is armed again from 06:30 and fires if the level is touched again."
+            )
+    lines += [
+        "",
+        f"Now: {both(prices.last[entries[0][0]['pair']], entries[0][0]['pair'][-3:], prices.eur_usd)} ({source_note(prices)}).",
+        "Today's brief re-plans the day.",
+        NFA,
+    ]
+    return "\n".join(lines)
 
 
 def outage_message(failures: int) -> str:

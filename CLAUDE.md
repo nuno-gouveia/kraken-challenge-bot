@@ -59,6 +59,7 @@ Milestone 1 is built and tested offline; next is Milestone 2 in `SPEC.md`. Updat
 - On GitHub: Actions > heartbeat > Run workflow. `test_alert: below|above` arms a test alert 0.1% from the price (milestone 1 acceptance); `dry_run` sends nothing and commits nothing.
 - An alert fires once: the heartbeat sets `status: "fired"`, `fired_at`, `fired_source` (`kraken` or `cmc`). An alert touched outside `valid_from`/`valid_until` gets one "NOT authorised now" note and `gate_notified_at`, and stays armed. An armed alert without `armed_at` is armed from the next run.
 - Until Milestone 2, action messages tell Nuno to report fills in the usual chat; there are no Done/Not done buttons yet.
+- Quiet hours 22:30 to 06:30 Lisbon (`src/quiet_hours.py`): action alerts hit then become `status: "held"`, nothing is sent, and the first run from 06:30 re-arms them from 06:30 and sends one "Morning update". A brief that sees `held_overnight` on an alert should say what happened overnight.
 
 ## History
 

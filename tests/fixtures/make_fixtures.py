@@ -69,6 +69,8 @@ def main() -> None:
 
     # Ticker for XBTEUR,XBTUSD at the heartbeat's "now".
     write("ticker.json", {"error": [], "result": {"XXBTZEUR": tick(eur), "XXBTZUSD": tick(usd)}})
+    # Ticker after an overnight fall that did not recover.
+    write("ticker_low.json", {"error": [], "result": {"XXBTZEUR": tick(72650.0), "XXBTZUSD": tick(81860.0)}})
 
     start, now_open = T("2026-10-03T06:00:00"), T("2026-10-03T12:00:00")
     # Quiet morning: 06:00 to the open 12:00 candle, price 74,450 to 74,750, no alert touched.
@@ -81,6 +83,15 @@ def main() -> None:
     write("ohlc_1m_spike.json", ohlc(candles(start, now_open, 60, {T("2026-10-03T11:58:00"): ("high", 77100.0)})))
     # Stale (cached) response: the newest candle is 11:50, ten minutes before now.
     write("ohlc_1m_stale.json", ohlc(candles(start, T("2026-10-03T11:50:00"), 60)))
+    # Quiet hours (22:30 to 06:30 Lisbon = 21:30 to 05:30 UTC on 3 Oct).
+    # Night: 3 Oct 02:12 UTC (03:12 Lisbon) a low of 72,500 through the exit; open candle 02:15.
+    night_from, wick = T("2026-10-02T20:00:00"), {T("2026-10-03T02:12:00"): ("low", 72500.0)}
+    write("ohlc_1m_night.json", ohlc(candles(night_from, T("2026-10-03T02:15:00"), 60, wick)))
+    # Morning (open candle 05:31 UTC, 06:31 Lisbon), price recovered after the 02:12 wick.
+    write("ohlc_1m_morning_recovered.json", ohlc(candles(night_from, T("2026-10-03T05:31:00"), 60, wick)))
+    # Morning, still under the exit: every minute from 05:20 UTC trades down to 72,600.
+    still = {**wick, **{t: ("low", 72600.0) for t in range(T("2026-10-03T05:20:00"), T("2026-10-03T05:32:00"), 60)}}
+    write("ohlc_1m_morning_still_below.json", ohlc(candles(night_from, T("2026-10-03T05:31:00"), 60, still)))
     # 15-minute candles for the two days before, for alerts older than the 12-hour 1-minute window.
     # 2 Oct 18:30 UTC: low 72,700. 2 Oct 18:45: the candle an alert armed at 18:47 sits in, low 72,650.
     write("ohlc_15m.json", ohlc(candles(T("2026-10-01T12:00:00"), now_open, 900, {

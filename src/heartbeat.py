@@ -22,7 +22,7 @@ from pathlib import Path
 
 import requests
 
-from src import alerts, messages, prices as price_source, telegram
+from src import alerts, messages, prices as price_source, quiet_hours, telegram
 
 FAILURES_BEFORE_OUTAGE = 3
 HEARTBEAT_DEFAULTS = {"price_failures": 0, "outage_notified": False, "alerts_problems": []}
@@ -58,10 +58,51 @@ def write_json(path: Path, data) -> None:
     path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
 
 
+def morning_recheck(live: list[dict], held: list[dict], p, now: float) -> dict[str, tuple[dict, float]]:
+    """First run after quiet hours: every action due overnight is armed again
+    from 06:30, so it fires now only if the price is still through its level.
+
+    Covers alerts the night runs held, and action alerts first touched during
+    the night that no run saw (e.g. GitHub skipped the night's runs).
+    Returns id -> (alert, first touch time).
+    """
+    q_start, q_end = quiet_hours.last_window(now)
+    overnight = {}
+    for a in held:
+        overnight[a["id"]] = (a, alerts.parse_ts(a.get("held_first_touch_at")) or q_end)
+    for a in live:
+        if a["kind"] != "action":
+            continue
+        hit = alerts.evaluate(a, p.candles[a["pair"]], now)
+        if hit and hit.authorised and q_start <= hit.first_touch.time < q_end:
+            overnight[a["id"]] = (a, hit.first_touch.time)
+    for a, first in overnight.values():
+        a.pop("held_at", None)
+        a.pop("held_first_touch_at", None)
+        a.update(status="armed", armed_at=alerts.iso(q_end),
+                 held_overnight={"first_touch_at": alerts.iso(first), "rechecked_at": alerts.iso(q_end)})
+    return overnight
+
+
+def overnight_entries(overnight, hits, p, now):
+    q_end = quiet_hours.last_window(now)[1]
+    fired = {h.alert["id"] for h in hits if h.authorised}
+    entries = []
+    for aid, (a, first) in overnight.items():
+        night = [c for c in p.candles[a["pair"]] if first <= c.time < q_end]
+        if a["direction"] == "below":
+            extreme = min((c.low for c in night), default=a["level"])
+        else:
+            extreme = max((c.high for c in night), default=a["level"])
+        entries.append((a, first, extreme, aid in fired))
+    return entries
+
+
 def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key: str | None,
         now_fn=time.time, sleep=time.sleep, write: bool = True) -> list[str]:
     """One heartbeat. Returns a summary of what changed, for the commit message."""
     now = now_fn()
+    quiet = quiet_hours.is_quiet(now)
     summary: list[str] = []
     hb_path, alerts_path = state_dir / "heartbeat.json", state_dir / "alerts.json"
     hb = {**HEARTBEAT_DEFAULTS, **read_json(hb_path, {})}
@@ -83,14 +124,15 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
         print(f"alerts: {p}")
     if bad != hb["alerts_problems"]:
         text = messages.problems_message(bad) if bad else messages.problems_cleared_message()
-        if notifier.send(text):
+        if notifier.send(text, silent=quiet):
             hb["alerts_problems"] = bad
             summary.append("alerts file problems" if bad else "alerts file fixed")
 
     live = alerts.watchable(doc, bad) if doc else []
-    if live:
+    held = [a for a in doc["alerts"] if isinstance(a, dict) and a.get("status") == "held"] if doc else []
+    if live or (held and not quiet):
         since: dict[str, int] = {}
-        for a in live:
+        for a in live + held:
             t = int(alerts.parse_ts(a["armed_at"]))
             since[a["pair"]] = min(since.get(a["pair"], t), t)
         try:
@@ -102,22 +144,36 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
         if p is None:
             hb["price_failures"] = min(hb["price_failures"] + 1, FAILURES_BEFORE_OUTAGE)
             if hb["price_failures"] >= FAILURES_BEFORE_OUTAGE and not hb["outage_notified"]:
-                if notifier.send(messages.outage_message(FAILURES_BEFORE_OUTAGE)):
+                if notifier.send(messages.outage_message(FAILURES_BEFORE_OUTAGE), silent=quiet):
                     hb["outage_notified"] = True
                     summary.append("prices down")
         else:
             print(f"prices: {p.source}, " + ", ".join(f"{k} {v:,.2f}" for k, v in sorted(p.last.items())))
-            if hb["outage_notified"] and notifier.send(messages.recovered_message(p)):
+            if hb["outage_notified"] and notifier.send(messages.recovered_message(p), silent=quiet):
                 hb["outage_notified"] = False
                 summary.append("prices back")
             hb["price_failures"] = 0
             now = now_fn()
-            for a in live:
-                hit = alerts.evaluate(a, p.candles[a["pair"]], now)
-                if hit is None:
-                    continue
-                if hit.authorised:
-                    text = messages.alert_message(hit, p, account, now)
+            quiet = quiet_hours.is_quiet(now)
+            overnight = morning_recheck(live, held, p, now) if not quiet else {}
+            if overnight:
+                live = live + [a for a in held if a not in live]
+            hits = [h for h in (alerts.evaluate(a, p.candles[a["pair"]], now) for a in live) if h]
+            if overnight:
+                text = messages.morning_message(overnight_entries(overnight, hits, p, now), p, now)
+                if notifier.send(text):
+                    summary.append("morning update")
+            for hit in hits:
+                a = hit.alert
+                print(f"alerts: {a['id']} hit ({'authorised' if hit.authorised else 'outside window'})")
+                if hit.authorised and a["kind"] == "action" and quiet:
+                    # Quiet hours: don't send, assume he doesn't act, re-check at 06:30.
+                    a.update(status="held", held_at=alerts.iso(now),
+                             held_first_touch_at=alerts.iso(hit.first_touch.time))
+                    summary.append(f"held {a['id']} (quiet hours)")
+                elif hit.authorised:
+                    first = overnight.get(a["id"], (None, None))[1]
+                    text = messages.alert_message(hit, p, account, now, overnight_at=first)
                     if notifier.send(text, silent=a["kind"] == "watch"):
                         a.update(status="fired", fired_at=alerts.iso(now), fired_source=p.source)
                         summary.append(f"fired {a['id']}")
@@ -125,7 +181,6 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
                     if notifier.send(messages.gate_message(hit, p, now), silent=True):
                         a["gate_notified_at"] = alerts.iso(now)
                         summary.append(f"{a['id']} touched outside its window")
-                print(f"alerts: {a['id']} hit ({'authorised' if hit.authorised else 'outside window'})")
 
     if write:
         if doc is not None and doc != doc_before:
