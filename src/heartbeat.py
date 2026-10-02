@@ -22,29 +22,60 @@ from pathlib import Path
 
 import requests
 
-from src import alerts, messages, prices as price_source, quiet_hours, telegram
+from src import alerts, inbound, messages, prices as price_source, quiet_hours, telegram
 
 FAILURES_BEFORE_OUTAGE = 3
 HEARTBEAT_DEFAULTS = {"price_failures": 0, "outage_notified": False, "alerts_problems": []}
 
 
 class Notifier:
+    """The bot, as the heartbeat uses it. In dry-run mode it reads updates
+    but only prints what it would send."""
+
     def __init__(self, session: requests.Session, token: str | None, chat_id: str | None, dry_run: bool):
         self.session, self.token, self.chat_id, self.dry_run = session, token, chat_id, dry_run
         self.failed = False
 
-    def send(self, text: str, silent: bool = False) -> bool:
+    def send(self, text: str, silent: bool = False, reply_markup: dict | None = None) -> bool:
         """True once Telegram has accepted the message."""
         if self.dry_run:
-            print(f"--- dry run: would send{' (silent)' if silent else ''} ---\n{text}\n---")
+            extra = (" (silent)" if silent else "") + (" (with Done / Not done)" if reply_markup else "")
+            print(f"--- dry run: would send{extra} ---\n{text}\n---")
             return True
         try:
-            telegram.send_message(self.session, self.token, self.chat_id, text, silent=silent)
+            telegram.send_message(self.session, self.token, self.chat_id, text, silent=silent, reply_markup=reply_markup)
             return True
         except telegram.TelegramError as exc:
             print(f"telegram: {exc}")
             self.failed = True
             return False
+
+    def updates(self, offset: int | None) -> list[dict]:
+        if not self.token:
+            return []
+        try:
+            return telegram.get_updates(self.session, self.token, offset)
+        except telegram.TelegramError as exc:
+            print(f"telegram: {exc}")
+            self.failed = True
+            return []
+
+    def answer(self, callback_id: str, text: str) -> None:
+        if self.dry_run:
+            print(f"--- dry run: would answer a button press: {text} ---")
+            return
+        try:
+            telegram.answer_callback(self.session, self.token, callback_id, text)
+        except telegram.TelegramError as exc:
+            print(f"telegram: {exc}")
+
+    def remove_buttons(self, chat_id, message_id) -> None:
+        if self.dry_run or chat_id is None or message_id is None:
+            return
+        try:
+            telegram.remove_buttons(self.session, self.token, chat_id, message_id)
+        except telegram.TelegramError as exc:
+            print(f"telegram: {exc}")
 
 
 def read_json(path: Path, default):
@@ -107,7 +138,9 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
     hb_path, alerts_path = state_dir / "heartbeat.json", state_dir / "alerts.json"
     hb = {**HEARTBEAT_DEFAULTS, **read_json(hb_path, {})}
     hb_before = copy.deepcopy(hb)
-    account = read_json(state_dir / "account.json", None)
+    account_path = state_dir / "account.json"
+    account = read_json(account_path, None)
+    account_before = copy.deepcopy(account)
 
     try:
         doc = alerts.load(alerts_path)
@@ -119,7 +152,16 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
             if isinstance(a, dict) and a.get("status") == "armed" and not a.get("armed_at"):
                 a["armed_at"] = alerts.iso(now)
                 print(f"alerts: {a.get('id')} had no armed_at, armed from now")
+        bad = []
+    # Nuno's reports first, so a fill he sent is in the account (and its
+    # alerts armed or disarmed) before any alert is checked.
+    rx = inbound.Inbound(state_dir, notifier, getattr(notifier, "chat_id", None), session, now,
+                         dry_run=not write)
+    doc, account = rx.run(doc, account)
+    summary += rx.summary
+    if doc is not None:
         bad = alerts.problems(doc, now)
+
     for p in bad:
         print(f"alerts: {p}")
     if bad != hb["alerts_problems"]:
@@ -174,7 +216,8 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
                 elif hit.authorised:
                     first = overnight.get(a["id"], (None, None))[1]
                     text = messages.alert_message(hit, p, account, now, overnight_at=first)
-                    if notifier.send(text, silent=a["kind"] == "watch"):
+                    keyboard = messages.buttons(a["id"]) if a["kind"] == "action" else None
+                    if notifier.send(text, silent=a["kind"] == "watch", reply_markup=keyboard):
                         a.update(status="fired", fired_at=alerts.iso(now), fired_source=p.source)
                         summary.append(f"fired {a['id']}")
                 else:
@@ -187,6 +230,8 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
             alerts.save(alerts_path, doc)
         if hb != hb_before:
             write_json(hb_path, hb)
+        if account is not None and account != account_before:
+            write_json(account_path, account)
     return summary
 
 

@@ -1,0 +1,4 @@
+{
+  "mode": "shadow",
+  "about": "shadow: the daily brief writes state/alerts.proposed.json and labels its email as a comparison; the heartbeat keeps watching state/alerts.json unchanged. live: the brief rewrites state/alerts.json and the heartbeat follows it. Nuno switches this to live (SPEC.md milestone 5)."
+}

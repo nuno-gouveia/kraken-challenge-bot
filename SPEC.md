@@ -27,7 +27,7 @@ Nuno should never again have to type a price alert into Kraken or watch a chart.
      Kraken API          Telegram bot  ◄──── push to state/alerts.json triggers notify.py
                                               ("today's alerts are set: ...")
 
-            06:45 UTC daily (GitHub Actions): snapshot.py -> data/snapshot.json (indicators from Kraken OHLC)
+            06:20 UTC daily (GitHub Actions): snapshot.py -> data/snapshot.json (indicators from Kraken OHLC)
 ```
 
 Why this split: an AI session every 5 minutes would be slow, costly and less reliable (the old setup's weekly review hung twice). The script is deterministic and cheap; Claude only runs where judgement is needed.
@@ -78,6 +78,7 @@ The bot must **only** act on messages from `TELEGRAM_CHAT_ID`. Anything else is 
 - `status`: `armed` → `fired` → (`done` | `skipped`), or `disabled`. An alert fires **once**. Re-arming means Claude writes it again with a new `armed_at`. An action alert hit during quiet hours becomes `held` (see Quiet hours).
 - `valid_from` / `valid_until`: time gate (UTC). Outside it, a firing is reported as "level touched, but NOT authorised now" and the alert stays armed. Used for the rule "no new entry before a tier-one print".
 - `guard_band`: `[low, high]` for entry alerts. The message includes the current price and says plainly "only buy if Kraken shows between X and Y; below X do NOT buy".
+- `trade` (optional): `buy`, `sell_all`, `sell_half` or `none`: what acting on the alert means, used to match a `/bought` or `/sold` report to it. Without it, read from the message's first words (BUY, SELL HALF, SELL).
 - `on_done`: what happens when Nuno presses **Done** or reports the trade. E.g. T1 done arms the breakeven exit and disarms the original exit. Follow-ups are armed only on his confirmation, never automatically on the price alone.
 - `level_usd_ref`: the USD equivalent at the time it was set, for the message only. Messages also show the USD equivalent at the live rate.
 
@@ -126,7 +127,7 @@ Written by `snapshot.py`. For each of BTC, ETH, LINK, BCH, DOGE, SHIB, in USD an
 | Workflow | Trigger | Notes |
 |---|---|---|
 | `heartbeat.yml` | `cron: "*/5 * * * *"` + `workflow_dispatch` | `concurrency: heartbeat` (cancel-in-progress: false). Commit only when state changed. GitHub's scheduler can run late under load, which is why the check uses candles since `armed_at`, not "price now" |
-| `snapshot.yml` | `cron: "45 6 * * *"` + `workflow_dispatch` | Before the 07:00 UTC brief |
+| `snapshot.yml` | `cron: "20 6 * * *"` + `workflow_dispatch` | Before the 07:00 UTC brief, with room for GitHub's late starts |
 | `notify-alerts.yml` | `push` touching `state/alerts.json` by Claude | Sends "today's alerts" summary to Telegram |
 
 Public repo: Actions minutes are free. Scheduled workflows get disabled after 60 days without repo activity; the daily brief commit keeps it alive.
@@ -154,3 +155,8 @@ Later, not now: event checks after tier-one prints (a scheduled Claude task at ~
 - Brief time after 25 Oct (07:00 or 08:00 Lisbon)?
 - Should watch alerts go to Telegram at all, or only into the next brief?
 - ~~Quiet hours~~ Answered 2 Oct 2026: no action messages 22:30 to 06:30 Lisbon, re-check at 06:30 (see Telegram).
+
+## Build notes (2 Oct 2026)
+
+- Milestones 1 to 4 are built. The daily brief starts in **shadow** mode (`config/brief.json`): it writes `state/alerts.proposed.json` and labels its email as a comparison, so the old brief and the Kraken app alerts stay in charge. Switching to `live` is step one of `docs/cutover.md`.
+- Done on a button never records a fill: the alert becomes `done` with `awaiting_fill: true` and the bot asks for the price. The account changes only from a `/bought` or `/sold` report.

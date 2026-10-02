@@ -11,6 +11,15 @@ from src.kraken import Candle
 
 DIRECTIONS = ("below", "above")
 KINDS = ("action", "watch")
+TRADES = ("buy", "sell_all", "sell_half", "none")
+LIVE = ("armed", "held")  # statuses the heartbeat still watches or will re-check
+
+PAIR_ASSETS = {"XBT": "BTC", "XDG": "DOGE"}
+
+
+def pair_asset(pair: str) -> str:
+    base = pair[:-3]
+    return PAIR_ASSETS.get(base, base)
 
 
 class AlertsFileError(Exception):
@@ -77,6 +86,8 @@ def problems(doc: dict, now: float) -> list[str]:
                 out.append(f"{aid}: armed_at is in the future")
         except (TypeError, ValueError, AttributeError):
             pass
+        if a.get("trade") is not None and a["trade"] not in TRADES:
+            out.append(f"{aid}: trade must be one of {', '.join(TRADES)}")
         band = a.get("guard_band")
         if band is not None and not (
             isinstance(band, list) and len(band) == 2 and all(isinstance(x, (int, float)) for x in band)
@@ -149,3 +160,82 @@ def evaluate(alert: dict, candles: list[Candle], now: float) -> Hit | None:
         ext = max(hits, key=lambda c: c.high)
         extreme = ext.high
     return Hit(alert, authorised, hits[0], extreme, ext.time)
+
+
+def trade_of(alert: dict) -> str:
+    """What acting on this alert means: buy, sell_all, sell_half or none.
+
+    The `trade` field when Claude sets it; otherwise read from the message,
+    which always starts with the instruction ("SELL HALF ...", "BUY ...").
+    """
+    if alert.get("trade") in TRADES:
+        return alert["trade"]
+    if alert.get("kind") != "action":
+        return "none"
+    text = alert.get("message", "").strip().upper()
+    if text.startswith("SELL HALF"):
+        return "sell_half"
+    if text.startswith("SELL"):
+        return "sell_all"
+    if text.startswith("BUY"):
+        return "buy"
+    return "none"
+
+
+def by_id(doc: dict, aid: str) -> dict | None:
+    return next((a for a in doc["alerts"] if isinstance(a, dict) and a.get("id") == aid), None)
+
+
+def apply_on_done(doc: dict, alert: dict, now_iso: str) -> tuple[list[str], list[str]]:
+    """Arm and disarm what the alert's on_done lists. Returns (armed, disarmed) ids."""
+    on_done = alert.get("on_done") or {}
+    armed, disarmed = [], []
+    for aid in on_done.get("arm", []):
+        target = by_id(doc, aid)
+        if target is None or target.get("status") == "armed":
+            continue
+        for k in ("fired_at", "fired_source", "gate_notified_at", "held_at", "held_first_touch_at", "disabled_reason"):
+            target.pop(k, None)
+        target.update(status="armed", armed_at=now_iso)
+        armed.append(aid)
+    for aid in on_done.get("disarm", []):
+        target = by_id(doc, aid)
+        if target is None or target.get("status") not in LIVE:
+            continue
+        target.update(status="disabled", disabled_reason=f"on_done of {alert['id']}")
+        disarmed.append(aid)
+    return armed, disarmed
+
+
+def mark_done(doc: dict, alert: dict, now_iso: str, how: str) -> tuple[list[str], list[str]]:
+    alert.update(status="done", done_at=now_iso, done_via=how)
+    return apply_on_done(doc, alert, now_iso)
+
+
+def fired_for(doc: dict, asset: str, trades: tuple[str, ...]) -> dict | None:
+    """The most recent fired action alert on this asset whose trade is one of `trades`."""
+    fired = [
+        a for a in doc["alerts"]
+        if isinstance(a, dict) and a.get("status") == "fired" and pair_asset(a.get("pair", "")) == asset
+        and trade_of(a) in trades
+    ]
+    return max(fired, key=lambda a: a.get("fired_at") or "", default=None)
+
+
+def disarm_sells(doc: dict, asset: str, reason: str) -> list[str]:
+    """The position is gone: its exits and targets must not fire any more."""
+    out = []
+    for a in doc["alerts"]:
+        if (isinstance(a, dict) and a.get("status") in LIVE and pair_asset(a.get("pair", "")) == asset
+                and trade_of(a) in ("sell_all", "sell_half")):
+            a.update(status="disabled", disabled_reason=reason)
+            out.append(a["id"])
+    return out
+
+
+def sells_armed(doc: dict, asset: str) -> bool:
+    return any(
+        isinstance(a, dict) and a.get("status") in LIVE and pair_asset(a.get("pair", "")) == asset
+        and trade_of(a) == "sell_all" and a.get("direction") == "below"
+        for a in doc["alerts"]
+    )

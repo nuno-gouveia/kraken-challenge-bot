@@ -12,15 +12,15 @@ This repo replaces a setup where Claude wrote daily emails and Nuno typed price 
 
 ## Build status
 
-Milestone 1 is built and tested offline; next is Milestone 2 in `SPEC.md`. Update this section as milestones land.
+Milestones 1 to 4 are built; milestone 5 is Nuno's checklist in `docs/cutover.md`. Update this section as milestones land.
 
 | Milestone | Status |
 |---|---|
-| 1. Heartbeat: Kraken price + alert check + Telegram send | built (`src/`, `heartbeat.yml`, 30 tests). Acceptance pending: a live test alert reaching Nuno on Telegram |
-| 2. Telegram inbound: `/bought`, `/sold`, `/status`, `/alerts` | not started |
-| 3. Market snapshot job (indicators from Kraken OHLC) | not started |
-| 4. Daily brief as a scheduled Claude Code task | not started |
-| 5. Cut-over: retire the old claude.ai scheduled tasks | not started |
+| 1. Heartbeat: Kraken price + alert check + Telegram send | live on `main`; acceptance: the 0.1% test alert reaching Nuno once |
+| 2. Telegram inbound: `/bought`, `/sold`, `/status`, `/alerts` | built (`src/inbound.py`); acceptance: `/dryrun Bought 100 at <price>` |
+| 3. Market snapshot job (indicators from Kraken OHLC) | built (`src/snapshot.py`, `snapshot.yml`); acceptance: one day checked against a chart |
+| 4. Daily brief as a scheduled Claude Code task | built (`docs/daily-brief.md`, `notify-alerts.yml`), running in **shadow** mode (`config/brief.json`) |
+| 5. Cut-over: retire the old claude.ai scheduled tasks | Nuno's checklist: `docs/cutover.md` |
 
 ## Where things live
 
@@ -30,8 +30,12 @@ Milestone 1 is built and tested offline; next is Milestone 2 in `SPEC.md`. Updat
 | `state/alerts.json` | Every live alert, its level, direction and the action text Nuno receives | Claude (daily brief), heartbeat (marks alerts fired) |
 | `state/inbox.jsonl` | Every Telegram message from Nuno, appended verbatim with a timestamp | Heartbeat |
 | `state/heartbeat.json` | Price-feed failure count, whether the outage message went out, alert-file problems already reported | Heartbeat |
+| `state/telegram_offset.json` | The next Telegram update id to read | Heartbeat |
+| `state/alerts.proposed.json` | The daily brief's alerts while `config/brief.json` is in `shadow` mode; nothing watches it | Claude (daily brief) |
+| `config/brief.json` | `mode`: `shadow` (brief proposes, heartbeat keeps the current alerts) or `live` | Nuno (via any Claude session) |
 | `data/snapshot.json` | Latest market snapshot and indicators, computed from Kraken OHLC | Snapshot job |
 | `analyses/YYYY-MM-DD-brief.md` | The daily brief, as sent | Claude |
+| `docs/daily-brief.md` | The procedure the scheduled brief session follows | Claude, with Nuno's agreement |
 | `docs/strategy.md` | The trading rules and risk framework agreed with Nuno | Claude, only with Nuno's agreement |
 
 ## Hard rules for any Claude session in this repo
@@ -58,7 +62,10 @@ Milestone 1 is built and tested offline; next is Milestone 2 in `SPEC.md`. Updat
 - Local dry run (prints messages, writes nothing): `python -m src.heartbeat --dry-run`. Needs Kraken, which Claude's cloud sessions can't reach.
 - On GitHub: Actions > heartbeat > Run workflow. `test_alert: below|above` arms a test alert 0.1% from the price (milestone 1 acceptance); `dry_run` sends nothing and commits nothing.
 - An alert fires once: the heartbeat sets `status: "fired"`, `fired_at`, `fired_source` (`kraken` or `cmc`). An alert touched outside `valid_from`/`valid_until` gets one "NOT authorised now" note and `gate_notified_at`, and stays armed. An armed alert without `armed_at` is armed from the next run.
-- Until Milestone 2, action messages tell Nuno to report fills in the usual chat; there are no Done/Not done buttons yet.
+- Action alerts carry Done / Not done buttons. Done marks the alert `done` (with `awaiting_fill: true` until he sends the price) and applies its `on_done`; Not done marks it `skipped`. A `/sold` or `/bought` report marks the latest matching `fired` alert done. Closing a position disables its remaining sell alerts. What acting on an alert means comes from its `trade` field, or else from the first word of its message (BUY / SELL / SELL HALF).
+- Telegram replies wait for the next heartbeat (5 minutes, often more when GitHub runs late).
+- Before committing alerts: `python -m src.validate_alerts state/alerts.json`.
+- The daily brief: `docs/daily-brief.md`. Snapshot by hand: Actions > snapshot > Run workflow.
 - Quiet hours 22:30 to 06:30 Lisbon (`src/quiet_hours.py`): action alerts hit then become `status: "held"`, nothing is sent, and the first run from 06:30 re-arms them from 06:30 and sends one "Morning update". A brief that sees `held_overnight` on an alert should say what happened overnight.
 
 ## History
