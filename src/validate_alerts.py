@@ -14,7 +14,7 @@ from pathlib import Path
 
 from src import alerts
 
-EM_DASH = "—"
+EM_DASH = "\u2014"
 
 
 def check(doc: dict, now: float) -> tuple[list[str], list[str]]:
