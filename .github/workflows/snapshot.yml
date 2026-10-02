@@ -4,7 +4,7 @@ name: snapshot
 # Kraken, so this job fetches it and commits data/snapshot.json.
 on:
   schedule:
-    - cron: "45 6 * * *"
+    - cron: "20 6 * * *"
   workflow_dispatch:
 
 concurrency:

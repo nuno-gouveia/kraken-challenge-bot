@@ -2,7 +2,7 @@
 
     python -m src.snapshot [--out data/snapshot.json]
 
-Runs on GitHub Actions at 06:45 UTC (Claude's cloud sessions can't reach
+Runs on GitHub Actions at 06:20 UTC (well before the 07:00 brief; scheduled runs can start late) (Claude's cloud sessions can't reach
 Kraken). For BTC, ETH, LINK, BCH, DOGE and SHIB, in USD and EUR: last price,
 24h high/low/change, 7d change, and daily RSI14, ATR14, EMA20/50/200,
 Bollinger(20,2) and MACD(12,26,9), computed from CLOSED daily candles only.

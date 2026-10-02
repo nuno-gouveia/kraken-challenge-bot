@@ -1,0 +1,43 @@
+name: notify-alerts
+
+# When the daily brief (or a person) pushes new alerts, tell Nuno which
+# alerts are now set. The heartbeat's own commits use GITHUB_TOKEN, which
+# never triggers workflows, so this doesn't fire on every alert marked fired.
+on:
+  push:
+    branches: [main]
+    paths: [state/alerts.json]
+
+concurrency:
+  group: notify-alerts
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -q -r requirements.txt
+
+      - name: Previous alerts
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: git show "$BEFORE:state/alerts.json" > "$RUNNER_TEMP/before.json" 2>/dev/null || true
+
+      - name: Notify
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+        run: python -m src.notify --before "$RUNNER_TEMP/before.json"
