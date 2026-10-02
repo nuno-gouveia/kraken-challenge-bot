@@ -17,7 +17,15 @@
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
-      "on_done": { "arm": [], "disarm": ["btc-warning", "btc-t1", "btc-t2", "btc-breakeven"] }
+      "on_done": {
+        "arm": [],
+        "disarm": [
+          "btc-warning",
+          "btc-t1",
+          "btc-t2",
+          "btc-breakeven"
+        ]
+      }
     },
     {
       "id": "btc-warning",
@@ -47,7 +55,15 @@
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
-      "on_done": { "arm": ["btc-breakeven"], "disarm": ["btc-exit", "btc-warning"] }
+      "on_done": {
+        "arm": [
+          "btc-breakeven"
+        ],
+        "disarm": [
+          "btc-exit",
+          "btc-warning"
+        ]
+      }
     },
     {
       "id": "btc-breakeven",
@@ -62,7 +78,12 @@
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
-      "on_done": { "arm": [], "disarm": ["btc-t2"] }
+      "on_done": {
+        "arm": [],
+        "disarm": [
+          "btc-t2"
+        ]
+      }
     },
     {
       "id": "btc-t2",
@@ -77,7 +98,14 @@
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
-      "on_done": { "arm": [], "disarm": ["btc-breakeven", "btc-exit", "btc-warning"] }
+      "on_done": {
+        "arm": [],
+        "disarm": [
+          "btc-breakeven",
+          "btc-exit",
+          "btc-warning"
+        ]
+      }
     },
     {
       "id": "btc-watch-low",
@@ -104,6 +132,21 @@
       "message": "Watch level: BTC is above EUR 77,250 (R2 $87,000). Nothing to do.",
       "status": "armed",
       "armed_at": "2026-10-02T21:45:00Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": null
+    },
+    {
+      "id": "test-20261002T2209",
+      "pair": "XBTEUR",
+      "direction": "below",
+      "level": 75049,
+      "level_usd_ref": 84378,
+      "kind": "watch",
+      "message": "TEST alert, nothing to do. BTC moved 0.1% down from when the test was set; this checks the heartbeat reaches you.",
+      "status": "armed",
+      "armed_at": "2026-10-02T22:09:33Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
