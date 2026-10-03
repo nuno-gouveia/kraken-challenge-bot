@@ -1,3 +1,4 @@
 {"ts": "2026-10-02T21:49:35Z", "text": "/start", "parsed": {"dry": false, "cmd": "help"}, "update_id": 70508655}
 {"ts": "2026-10-02T21:54:40Z", "text": "Hello", "parsed": {"dry": false, "cmd": "unknown"}, "update_id": 70508656}
 {"ts": "2026-10-02T22:34:30Z", "text": "/dryrun Bought 100 at 84000", "parsed": {"dry": true, "cmd": "bought", "asset": "BTC", "usd": 100.0, "price": 84000.0, "price_ccy": "USD"}, "update_id": 70508657}
+{"ts": "2026-10-03T06:54:21Z", "text": "/status", "parsed": {"dry": false, "cmd": "status"}, "update_id": 70508658}
