@@ -14,7 +14,7 @@ from pathlib import Path
 
 from src import account as acct
 from src import alerts, commands, kraken
-from src.messages import NFA, both, escape, lisbon, money, num, signed_usd
+from src.messages import NFA, escape, lisbon, listing_order, num, signed_usd, trigger
 
 PASS_USD, FAIL_USD = 1120.0, 950.0
 
@@ -301,9 +301,7 @@ class Inbound:
     def alert_brief(self, a: dict | None) -> str:
         if a is None:
             return "?"
-        rate = self.prices.eur_usd
-        level = both(a["level"], a["pair"][-3:], rate) if rate else money(a["level"], a["pair"][-3:])
-        return f"{escape(a['id'])} ({a['direction']} {level})"
+        return f"{escape(a['id'])} ({trigger(a, self.prices.eur_usd, self.now)})"
 
     def status_text(self, account: dict | None, doc: dict | None) -> str:
         if account is None:
@@ -336,14 +334,12 @@ class Inbound:
         if eur:
             head += f" (BTC now EUR {num(eur)} / ${num(eur * rate)})"
         lines = [head]
-        for a in sorted(live, key=lambda a: -a["level"]):
-            quote = a["pair"][-3:]
-            level = both(a["level"], quote, rate) if rate else money(a["level"], quote)
+        for a in sorted(live, key=listing_order):
             dist = ""
-            if eur and a["pair"] == "XBTEUR":
+            if eur and a["pair"] == "XBTEUR" and not alerts.is_timed(a):
                 dist = f", {abs(a['level'] / eur - 1) * 100:.1f}% away"
             kind = "ACTION" if a["kind"] == "action" else "watch"
             held = " (held overnight)" if a["status"] == "held" else ""
-            lines.append(f"- {a['direction']} {level}{dist}: {kind}{held}, {escape(a['message'])}")
+            lines.append(f"- {trigger(a, rate, self.now)}{dist}: {kind}{held}, {escape(a['message'])}")
         lines.append(NFA)
         return "\n".join(lines)

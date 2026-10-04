@@ -22,7 +22,7 @@ def test_validator_catches_what_would_break_the_heartbeat(state):
                           "armed_at": "2026-10-03T07:00:00Z", "level_usd_ref": 87300})
     errors, warnings = validate_alerts.check(doc, NOW)
     assert "btc-exit: message has an em dash" in errors
-    assert "btc-warning: direction must be below or above" in errors
+    assert "btc-warning: direction must be below, above or time" in errors
     assert "btc-t1: on_done.arm names unknown alert btc-nope" in errors
     assert "btc-t2: EUR level 78230 is not a multiple of 50" in warnings
     assert "btc-entry: entry alert without a guard_band" in warnings

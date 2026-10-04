@@ -18,7 +18,7 @@ from pathlib import Path
 import requests
 
 from src import alerts, kraken, quiet_hours, telegram
-from src.messages import NFA, both, escape, lisbon, num
+from src.messages import NFA, escape, lisbon, listing_order, num, trigger
 
 
 def live(doc: dict) -> dict[str, dict]:
@@ -32,12 +32,20 @@ def changes(before: dict | None, after: dict) -> list[str]:
     out = []
     added = [i for i in new if i not in old]
     removed = [i for i in old if i not in new]
-    moved = [i for i in new if i in old and old[i].get("level") != new[i].get("level")]
+    moved = [i for i in new if i in old
+             and (old[i].get("level"), old[i].get("at")) != (new[i].get("level"), new[i].get("at"))]
     if added:
         out.append("new " + ", ".join(escape(i) for i in added))
     if removed:
         out.append("removed " + ", ".join(escape(i) for i in removed))
     for i in moved:
+        if alerts.is_timed(new[i]) and alerts.is_timed(old[i]):
+            now = time.time()
+            out.append(f"{escape(i)} moved from {trigger(old[i], None, now)} to {trigger(new[i], None, now)}")
+            continue
+        if alerts.is_timed(new[i]) or alerts.is_timed(old[i]):
+            out.append(f"{escape(i)} changed")
+            continue
         quote = new[i]["pair"][-3:]
         out.append(f"{escape(i)} moved from {quote} {num(old[i]['level'])} to {quote} {num(new[i]['level'])}")
     return out
@@ -46,7 +54,7 @@ def changes(before: dict | None, after: dict) -> list[str]:
 def message(doc: dict, before: dict | None, last: dict[str, float] | None, now: float) -> str:
     rate = last["XBTUSD"] / last["XBTEUR"] if last else doc.get("eur_usd")
     eur = last["XBTEUR"] if last else None
-    alerts_now = sorted(live(doc).values(), key=lambda a: -a["level"])
+    alerts_now = sorted(live(doc).values(), key=listing_order)
     lines = [f"<b>Today's alerts are set</b> ({lisbon(now, now)} Lisbon, by {escape(str(doc.get('updated_by', '?')))})"]
     if eur:
         lines.append(f"BTC now EUR {num(eur)} / ${num(eur * rate)} (Kraken, EUR/USD {rate:.4f}).")
@@ -58,10 +66,10 @@ def message(doc: dict, before: dict | None, last: dict[str, float] | None, now: 
             continue
         lines.append(f"<b>{title}</b>")
         for a in group:
-            quote = a["pair"][-3:]
-            level = both(a["level"], quote, rate) if rate else f"{quote} {num(a['level'])}"
-            dist = f", {abs(a['level'] / eur - 1) * 100:.1f}% away" if eur and a["pair"] == "XBTEUR" else ""
-            lines.append(f"- {a['direction']} {level}{dist}: {escape(a['message'])}")
+            dist = ""
+            if eur and a["pair"] == "XBTEUR" and not alerts.is_timed(a):
+                dist = f", {abs(a['level'] / eur - 1) * 100:.1f}% away"
+            lines.append(f"- {trigger(a, rate, now)}{dist}: {escape(a['message'])}")
     diff = changes(before, doc)
     if diff:
         lines.append("Changed: " + "; ".join(diff) + ".")

@@ -171,12 +171,20 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
             summary.append("alerts file problems" if bad else "alerts file fixed")
 
     live = alerts.watchable(doc, bad) if doc else []
+    # Time alerts fire on the clock. An action due in quiet hours waits for 06:30.
+    timed = [a for a in live if alerts.is_timed(a)]
+    live = [a for a in live if not alerts.is_timed(a)]
+    due = [a for a in timed if alerts.due(a, now) and not (quiet and a["kind"] == "action")]
     held = [a for a in doc["alerts"] if isinstance(a, dict) and a.get("status") == "held"] if doc else []
-    if live or (held and not quiet):
+    p = None
+    if live or (held and not quiet) or due:
         since: dict[str, int] = {}
         for a in live + held:
             t = int(alerts.parse_ts(a["armed_at"]))
             since[a["pair"]] = min(since.get(a["pair"], t), t)
+        for a in due:
+            # Only the current price, for the message.
+            since.setdefault(a["pair"], int(now) - 300)
         try:
             p = price_source.fetch(session, since, cmc_key, now_fn=now_fn, sleep=sleep)
         except price_source.NoPrices as exc:
@@ -224,6 +232,13 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
                     if notifier.send(messages.gate_message(hit, p, now), silent=True):
                         a["gate_notified_at"] = alerts.iso(now)
                         summary.append(f"{a['id']} touched outside its window")
+
+    for a in due:
+        keyboard = messages.buttons(a["id"]) if a["kind"] == "action" else None
+        text = messages.time_message(a, p, account, now)
+        if notifier.send(text, silent=a["kind"] == "watch", reply_markup=keyboard):
+            a.update(status="fired", fired_at=alerts.iso(now), fired_source=p.source if p else "clock")
+            summary.append(f"fired {a['id']}")
 
     if write:
         if doc is not None and doc != doc_before:
