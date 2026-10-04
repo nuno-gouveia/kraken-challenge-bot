@@ -1,0 +1,157 @@
+{
+  "updated_at": "2026-10-04T07:10:00Z",
+  "updated_by": "claude (daily brief)",
+  "eur_usd": 1.1241,
+  "note": "Shadow proposal for 4 Oct 2026. Levels unchanged from the current set; the spent test alert is disabled.",
+  "alerts": [
+    {
+      "id": "btc-exit",
+      "pair": "XBTEUR",
+      "direction": "below",
+      "level": 72800,
+      "level_usd_ref": 81834,
+      "kind": "action",
+      "message": "SELL ALL your BTC at market now. This is the exit of the plan.",
+      "status": "armed",
+      "armed_at": "2026-10-02T18:47:00Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": {
+        "arm": [],
+        "disarm": [
+          "btc-warning",
+          "btc-t1",
+          "btc-t2",
+          "btc-breakeven"
+        ]
+      }
+    },
+    {
+      "id": "btc-warning",
+      "pair": "XBTEUR",
+      "direction": "below",
+      "level": 73300,
+      "level_usd_ref": 82397,
+      "kind": "watch",
+      "message": "Warning: BTC is approaching your exit (EUR 72,800). Do nothing yet.",
+      "status": "armed",
+      "armed_at": "2026-10-02T18:47:00Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": null
+    },
+    {
+      "id": "btc-t1",
+      "pair": "XBTEUR",
+      "direction": "above",
+      "level": 77050,
+      "level_usd_ref": 86612,
+      "kind": "action",
+      "message": "SELL HALF your BTC at market now (T1). The exit then moves up to breakeven.",
+      "status": "armed",
+      "armed_at": "2026-10-02T18:47:00Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": {
+        "arm": [
+          "btc-breakeven"
+        ],
+        "disarm": [
+          "btc-exit",
+          "btc-warning"
+        ]
+      }
+    },
+    {
+      "id": "btc-breakeven",
+      "pair": "XBTEUR",
+      "direction": "below",
+      "level": 74600,
+      "level_usd_ref": 83858,
+      "kind": "action",
+      "message": "SELL the rest of your BTC at market now. Price is back at your entry (breakeven exit after T1).",
+      "status": "disabled",
+      "armed_at": null,
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": {
+        "arm": [],
+        "disarm": [
+          "btc-t2"
+        ]
+      }
+    },
+    {
+      "id": "btc-t2",
+      "pair": "XBTEUR",
+      "direction": "above",
+      "level": 78200,
+      "level_usd_ref": 87905,
+      "kind": "action",
+      "message": "SELL the rest of your BTC at market now (T2). Trade complete.",
+      "status": "armed",
+      "armed_at": "2026-10-02T18:47:00Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": {
+        "arm": [],
+        "disarm": [
+          "btc-breakeven",
+          "btc-exit",
+          "btc-warning"
+        ]
+      }
+    },
+    {
+      "id": "btc-watch-low",
+      "pair": "XBTEUR",
+      "direction": "below",
+      "level": 72150,
+      "level_usd_ref": 81104,
+      "kind": "watch",
+      "message": "Watch level: BTC lost EUR 72,150, under the strong $81,380 support. Nothing to do; the exit above should already have fired.",
+      "status": "armed",
+      "armed_at": "2026-10-02T18:47:00Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": null
+    },
+    {
+      "id": "btc-watch-high",
+      "pair": "XBTEUR",
+      "direction": "above",
+      "level": 77250,
+      "level_usd_ref": 86837,
+      "kind": "watch",
+      "message": "Watch level: BTC is above EUR 77,250 (R2 $87,000). Nothing to do.",
+      "status": "armed",
+      "armed_at": "2026-10-02T21:45:00Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": null
+    },
+    {
+      "id": "test-20261002T2209",
+      "pair": "XBTEUR",
+      "direction": "below",
+      "level": 75049,
+      "level_usd_ref": 84363,
+      "kind": "watch",
+      "message": "TEST alert, nothing to do. BTC moved 0.1% down from when the test was set; this checks the heartbeat reaches you.",
+      "status": "disabled",
+      "armed_at": "2026-10-02T22:09:33Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": null,
+      "disabled_reason": "Test alert, delivery already checked; not part of the plan."
+    }
+  ]
+}
