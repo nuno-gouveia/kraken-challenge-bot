@@ -10,6 +10,7 @@ from pathlib import Path
 from src.kraken import Candle
 
 DIRECTIONS = ("below", "above")
+TIMED = "time"  # direction of an alert that fires at a set time (`at`), not on a price
 KINDS = ("action", "watch")
 TRADES = ("buy", "sell_all", "sell_half", "none")
 LIVE = ("armed", "held")  # statuses the heartbeat still watches or will re-check
@@ -30,6 +31,15 @@ def parse_ts(value: str | None) -> float | None:
     if value is None:
         return None
     return datetime.fromisoformat(value.replace("Z", "+00:00")).timestamp()
+
+
+def is_timed(alert: dict) -> bool:
+    return alert.get("direction") == TIMED
+
+
+def due(alert: dict, now: float) -> bool:
+    """Has a time alert's moment come?"""
+    return parse_ts(alert["at"]) <= now
 
 
 def iso(ts: float) -> str:
@@ -68,9 +78,15 @@ def problems(doc: dict, now: float) -> list[str]:
             out.append(f"{aid}: no id")
         if not isinstance(a.get("pair"), str) or not a["pair"]:
             out.append(f"{aid}: no pair")
-        if a.get("direction") not in DIRECTIONS:
-            out.append(f"{aid}: direction must be below or above")
-        if isinstance(a.get("level"), bool) or not isinstance(a.get("level"), (int, float)):
+        if a.get("direction") == TIMED:
+            try:
+                if parse_ts(a.get("at")) is None:
+                    out.append(f"{aid}: a time alert needs `at`")
+            except (TypeError, ValueError, AttributeError):
+                out.append(f"{aid}: at is not an ISO time")
+        elif a.get("direction") not in DIRECTIONS:
+            out.append(f"{aid}: direction must be below, above or time")
+        elif isinstance(a.get("level"), bool) or not isinstance(a.get("level"), (int, float)):
             out.append(f"{aid}: level is not a number")
         if a.get("kind") not in KINDS:
             out.append(f"{aid}: kind must be action or watch")

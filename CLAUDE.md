@@ -62,6 +62,7 @@ Milestones 1 to 4 are built; milestone 5 is Nuno's checklist in `docs/cutover.md
 - Local dry run (prints messages, writes nothing): `python -m src.heartbeat --dry-run`. Needs Kraken, which Claude's cloud sessions can't reach.
 - On GitHub: Actions > heartbeat > Run workflow. `test_alert: below|above` arms a test alert 0.1% from the price (milestone 1 acceptance); `dry_run` sends nothing and commits nothing.
 - An alert fires once: the heartbeat sets `status: "fired"`, `fired_at`, `fired_source` (`kraken` or `cmc`). An alert touched outside `valid_from`/`valid_until` gets one "NOT authorised now" note and `gate_notified_at`, and stays armed. An armed alert without `armed_at` is armed from the next run.
+- Time alerts (`direction: "time"`, `at`, `level: null`) fire at a set time instead of a price: used for deadlines such as "be out before a tier-one print". A time action due in quiet hours waits until 06:30.
 - Action alerts carry Done / Not done buttons. Done marks the alert `done` (with `awaiting_fill: true` until he sends the price) and applies its `on_done`; Not done marks it `skipped`. A `/sold` or `/bought` report marks the latest matching `fired` alert done. Closing a position disables its remaining sell alerts. What acting on an alert means comes from its `trade` field, or else from the first word of its message (BUY / SELL / SELL HALF).
 - Telegram replies wait for the next heartbeat (5 minutes, often more when GitHub runs late).
 - Before committing alerts: `python -m src.validate_alerts state/alerts.json`.

@@ -12,7 +12,7 @@ import sys
 import time
 from pathlib import Path
 
-from src import alerts
+from src import alerts, quiet_hours
 
 EM_DASH = "\u2014"
 
@@ -34,7 +34,16 @@ def check(doc: dict, now: float) -> tuple[list[str], list[str]]:
             continue
         if a.get("pair", "").endswith("EUR") and isinstance(a.get("level"), (int, float)) and a["level"] % 50:
             warnings.append(f"{aid}: EUR level {a['level']} is not a multiple of 50")
-        if "level_usd_ref" not in a:
+        if alerts.is_timed(a):
+            try:
+                at = alerts.parse_ts(a.get("at"))
+            except (TypeError, ValueError, AttributeError):
+                at = None
+            if at is not None and at <= now:
+                warnings.append(f"{aid}: at is in the past, it fires on the next heartbeat")
+            if at is not None and a.get("kind") == "action" and quiet_hours.is_quiet(at):
+                warnings.append(f"{aid}: at falls in quiet hours (22:30 to 06:30 Lisbon), it waits until 06:30")
+        elif "level_usd_ref" not in a:
             warnings.append(f"{aid}: no level_usd_ref")
         if a.get("kind") == "action":
             trade = alerts.trade_of(a)

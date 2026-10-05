@@ -1,6 +1,6 @@
 {
-  "updated_at": "2026-10-02T21:45:00Z",
-  "updated_by": "claude (seed, migrated from the manual Kraken app alerts)",
+  "updated_at": "2026-10-04T11:29:07Z",
+  "updated_by": "claude (CPI deadline as time alerts, asked by Nuno)",
   "eur_usd": 1.1268,
   "note": "These mirror the alerts Nuno currently has in the Kraken app. Keep the app alerts on until the heartbeat is live and tested (SPEC.md milestone 5).",
   "alerts": [
@@ -23,7 +23,9 @@
           "btc-warning",
           "btc-t1",
           "btc-t2",
-          "btc-breakeven"
+          "btc-breakeven",
+          "btc-cpi-eve",
+          "btc-cpi-exit"
         ]
       }
     },
@@ -61,7 +63,9 @@
         ],
         "disarm": [
           "btc-exit",
-          "btc-warning"
+          "btc-warning",
+          "btc-cpi-eve",
+          "btc-cpi-exit"
         ]
       },
       "held_overnight": {
@@ -107,7 +111,9 @@
         "disarm": [
           "btc-breakeven",
           "btc-exit",
-          "btc-warning"
+          "btc-warning",
+          "btc-cpi-eve",
+          "btc-cpi-exit"
         ]
       }
     },
@@ -157,6 +163,46 @@
       "valid_until": null,
       "guard_band": null,
       "on_done": null
+    },
+    {
+      "id": "btc-cpi-eve",
+      "pair": "XBTEUR",
+      "direction": "time",
+      "at": "2026-10-13T18:00:00Z",
+      "level": null,
+      "kind": "watch",
+      "message": "Heads-up: US CPI prints tomorrow (Tue 14 Oct) at 14:30 Lisbon. If you still hold BTC and T1 was not done, I'll tell you to sell tomorrow at 10:00. Nothing to do now.",
+      "status": "armed",
+      "armed_at": "2026-10-04T11:29:07Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": null
+    },
+    {
+      "id": "btc-cpi-exit",
+      "pair": "XBTEUR",
+      "direction": "time",
+      "at": "2026-10-14T09:00:00Z",
+      "level": null,
+      "kind": "action",
+      "trade": "sell_all",
+      "message": "SELL ALL your BTC at market now. US CPI prints today at 14:30 Lisbon and T1 was not reached, so the plan is to be out before it.",
+      "status": "armed",
+      "armed_at": "2026-10-04T11:29:07Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": {
+        "arm": [],
+        "disarm": [
+          "btc-exit",
+          "btc-warning",
+          "btc-t1",
+          "btc-t2",
+          "btc-breakeven"
+        ]
+      }
     }
   ]
 }

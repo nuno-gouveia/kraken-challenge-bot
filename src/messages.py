@@ -9,7 +9,7 @@ from datetime import datetime
 from html import escape as _escape
 from zoneinfo import ZoneInfo
 
-from src.alerts import Hit, pair_asset, parse_ts, trade_of
+from src.alerts import Hit, is_timed, pair_asset, parse_ts, trade_of
 from src.kraken import Candle
 
 LISBON = ZoneInfo("Europe/Lisbon")
@@ -159,6 +159,44 @@ def alert_message(hit: Hit, prices, account: dict | None, now: float, overnight_
     return "\n".join(lines)
 
 
+def trigger(a: dict, rate: float | None, now: float) -> str:
+    """What sets an alert off, for listings: "below EUR 72,800 / $81,834" or "at 14 Oct 10:00 Lisbon"."""
+    if is_timed(a):
+        return f"at {lisbon(parse_ts(a['at']), now)} Lisbon"
+    quote = a["pair"][-3:]
+    return f"{a['direction']} {both(a['level'], quote, rate) if rate else money(a['level'], quote)}"
+
+
+def listing_order(a: dict) -> tuple:
+    """Price alerts from the highest level down, then time alerts soonest first."""
+    if is_timed(a):
+        return (1, parse_ts(a["at"]))
+    return (0, -a["level"])
+
+
+def time_message(a: dict, prices, account: dict | None, now: float) -> str:
+    """A time alert whose moment has come. prices is None when no price source answered:
+    the message still goes out, because the time is what matters."""
+    action = a["kind"] == "action"
+    at = parse_ts(a["at"])
+    lines = [f"<b>ACTION: {escape(a['message'])}</b>" if action else f"<b>{escape(a['message'])}</b>"]
+    lines.append(f"Scheduled for {lisbon(at, now)} Lisbon. (Alert {escape(a['id'])})")
+    if now - at > LATE_AFTER_S:
+        lines.append(f"Note: this is {int((now - at) // 60)} min after the scheduled time "
+                     "(quiet hours, or this check ran late).")
+    pair = a["pair"]
+    if prices is not None and pair in prices.last:
+        lines.append(f"Now: {both(prices.last[pair], pair[-3:], prices.eur_usd)} ({source_note(prices)}).")
+        if action:
+            lines.extend(position_lines(account, asset(pair), usd_price(prices, pair)))
+    else:
+        lines.append("I can't read prices right now: check the price in the Kraken app.")
+    if action:
+        lines.append(CONFIRM_HINTS[trade_of(a)])
+    lines.append(NFA)
+    return "\n".join(lines)
+
+
 def gate_message(hit: Hit, prices, now: float) -> str:
     a = hit.alert
     pair, quote = a["pair"], a["pair"][-3:]
@@ -179,30 +217,44 @@ def gate_message(hit: Hit, prices, now: float) -> str:
     ])
 
 
+# What a held action would have asked for, and the verb to rule out: a
+# no-action update must never quote the alert's own "SELL ..." text.
+TRADE_WORDS = {"sell_half": ("sell half", "sell"), "sell_all": ("sell all", "sell"),
+               "buy": ("buy", "buy"), "none": ("action", "act")}
+
+
 def morning_message(entries: list[tuple[dict, float, float, bool]], prices, now: float) -> str:
     """One update at 06:30 for actions held overnight.
 
     entries: (alert, first touch time, overnight extreme, still through the level now)
+    The first line says whether anything is to be done, so it can't be misread half awake.
     """
+    due = any(still for *_, still in entries)
     lines = [
-        "<b>Morning update: actions held overnight (quiet hours 22:30 to 06:30 Lisbon).</b>",
-        "I assumed you did nothing overnight, and re-checked each one at 06:30:",
+        "<b>Morning update: an action is still due, see the next message.</b>" if due
+        else "<b>Morning update: nothing to do. Do not trade.</b>",
+        "While you slept (quiet hours 22:30 to 06:30 Lisbon) these levels were touched. "
+        "I re-checked each one at 06:30:",
     ]
     for a, first_at, extreme, still in entries:
         quote = a["pair"][-3:]
         below = a["direction"] == "below"
+        what, verb = TRADE_WORDS[trade_of(a)]
         lines.append("")
-        lines.append(f"<b>{escape(a['message'])}</b> (alert {escape(a['id'])})")
+        if still:
+            lines.append(f"<b>{escape(a['id'])} ({what}): still due.</b>")
+        else:
+            lines.append(f"<b>{escape(a['id'])} ({what}): NO action, do not {verb}.</b>")
         lines.append(
             f"Level {both(a['level'], quote, prices.eur_usd)}, first touched at {lisbon(first_at, now)}; "
             f"{'low' if below else 'high'} overnight {money(extreme, quote)}."
         )
         if still:
-            lines.append(f"Still {'below' if below else 'above'} the level: <b>the action stands</b>, see the next message.")
+            lines.append(f"Still {'below' if below else 'above'} the level at 06:30, so the action stands.")
         else:
             lines.append(
-                f"Back {'above' if below else 'below'} the level now: no action. "
-                "The alert is armed again from 06:30 and fires if the level is touched again."
+                f"Back {'above' if below else 'below'} the level at 06:30, so it did not fire. "
+                "It is armed again and fires if the level is touched again."
             )
     lines += [
         "",

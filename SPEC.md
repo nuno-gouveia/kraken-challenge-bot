@@ -74,6 +74,7 @@ The bot must **only** act on messages from `TELEGRAM_CHAT_ID`. Anything else is 
 ```
 
 - `direction`: `below` fires when any 1-minute candle **low** since `armed_at` is `<= level`; `above` when any **high** is `>= level`.
+- **Time alerts**: `direction: "time"` with `at` (UTC ISO) and `level: null` fire when the clock reaches `at`, not on a price, e.g. "sell before tomorrow's CPI". They keep `pair` (the asset, for the price in the message and for `/sold` matching). The message carries the current price when one can be read, and goes out even when no price source answers. A time **action** due in quiet hours waits until 06:30; a time watch goes out silently at night. Closing the position disables a pending time sell like any other sell; list it in the `on_done.disarm` of the alerts that make it moot (T1, the exit, T2).
 - `kind`: `action` (loud Telegram notification, buttons "Done" / "Not done") or `watch` (silent notification, no buttons).
 - `status`: `armed` → `fired` → (`done` | `skipped`), or `disabled`. An alert fires **once**. Re-arming means Claude writes it again with a new `armed_at`. An action alert hit during quiet hours becomes `held` (see Quiet hours).
 - `valid_from` / `valid_until`: time gate (UTC). Outside it, a firing is reported as "level touched, but NOT authorised now" and the alert stays armed. Used for the rule "no new entry before a tier-one print".

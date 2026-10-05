@@ -45,6 +45,7 @@ Into `state/alerts.json` (live) or `state/alerts.proposed.json` (shadow), same s
 - EUR levels rounded to the nearest EUR 50. `level_usd_ref` = level x `eur_usd` from the snapshot. Set the top-level `eur_usd`, `updated_at`, and `updated_by: "claude (daily brief)"`.
 - `kind: "action"` messages start with the instruction in capitals: `SELL ALL your BTC at market now.`, `SELL HALF ...`, `BUY $420 of BTC at market now.` Set `trade` (`buy`, `sell_all`, `sell_half`). Watch messages say "Nothing to do".
 - Entries get a `guard_band` and, around a tier-one print, `valid_from`. Exits after T1 move to breakeven through `on_done` (T1 done arms the breakeven exit and disarms the original exit), never automatically.
+- **Deadlines are time alerts.** Whenever an open position must be closed by a date (a tier-one print with T1 not yet done), set a time action (`direction: "time"`, `at` in UTC, `level: null`, `trade: "sell_all"`, message starting `SELL ALL your BTC at market now.`) a few hours before the print and outside quiet hours, plus a silent time watch the evening before as a heads-up. Add both ids to the `on_done.disarm` of the T1, exit and T2 alerts, and give the time action an `on_done` that disarms the position's other alerts. Keep them unchanged from brief to brief like any other alert; if the print moves, move `at`.
 - Alerts that are dead, spent or withdrawn: set `status: "disabled"` with a `disabled_reason`. Drop `done`, `skipped` and `disabled` alerts older than 7 days.
 - No em dash anywhere.
 

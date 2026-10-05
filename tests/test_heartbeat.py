@@ -208,7 +208,7 @@ def test_bad_alert_is_reported_once_and_others_still_watched(state):
     rearm(state, **{"btc-t1": {"direction": "beloww"}})
     notifier, _ = run(state, FakeKraken("ohlc_1m_wick.json"))
     problems = [t for t, _ in notifier.sent if "Problem with the alerts file" in t]
-    assert len(problems) == 1 and "btc-t1: direction must be below or above" in problems[0]
+    assert len(problems) == 1 and "btc-t1: direction must be below, above or time" in problems[0]
     assert status(state)["btc-exit"] == "fired"
 
     notifier, _ = run(state, FakeKraken("ohlc_1m_wick.json"), now=NOW + 60)
