@@ -168,6 +168,13 @@ class Inbound:
             return doc, account
         doc = copy.deepcopy(doc) if doc else None
         asset = parsed["asset"]
+        dollars = parsed.get("usd") if parsed["cmd"] == "bought" else parsed.get("amount")
+        if isinstance(dollars, float) and dollars < 1:
+            # "/sold 0.0025 at 86600" is a coin quantity, but the bot reads a number as dollars.
+            self.reply(f"Nothing recorded: {num(dollars)} looks like a {escape(asset)} quantity, and I read amounts "
+                       "as dollars. Send /sold half at &lt;price&gt;, /sold all at &lt;price&gt;, "
+                       "or the dollar amount, e.g. /sold 210 at 86170.")
+            return doc, account
         price_usd, price_eur = self.to_usd(parsed)
         if price_usd is None:
             self.reply("I can't read Kraken's EUR/USD rate right now. Send the price in USD, e.g. /sold all at 82150.")
