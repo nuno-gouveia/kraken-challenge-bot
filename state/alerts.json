@@ -12,7 +12,7 @@
       "level_usd_ref": 82031,
       "kind": "action",
       "message": "SELL ALL your BTC at market now. This is the exit of the plan.",
-      "status": "armed",
+      "status": "disabled",
       "armed_at": "2026-10-02T18:47:00Z",
       "valid_from": null,
       "valid_until": null,
@@ -27,7 +27,8 @@
           "btc-cpi-eve",
           "btc-cpi-exit"
         ]
-      }
+      },
+      "disabled_reason": "on_done of btc-t1"
     },
     {
       "id": "btc-warning",
@@ -37,12 +38,13 @@
       "level_usd_ref": 82594,
       "kind": "watch",
       "message": "Warning: BTC is approaching your exit (EUR 72,800). Do nothing yet.",
-      "status": "armed",
+      "status": "disabled",
       "armed_at": "2026-10-02T18:47:00Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
-      "on_done": null
+      "on_done": null,
+      "disabled_reason": "on_done of btc-t1"
     },
     {
       "id": "btc-t1",
@@ -52,7 +54,7 @@
       "level_usd_ref": 86820,
       "kind": "action",
       "message": "SELL HALF your BTC at market now (T1). The exit then moves up to breakeven.",
-      "status": "fired",
+      "status": "done",
       "armed_at": "2026-10-05T05:30:00Z",
       "valid_from": null,
       "valid_until": null,
@@ -73,7 +75,9 @@
         "rechecked_at": "2026-10-05T05:30:00Z"
       },
       "fired_at": "2026-10-05T06:55:43Z",
-      "fired_source": "kraken"
+      "fired_source": "kraken",
+      "done_at": "2026-10-05T07:10:43Z",
+      "done_via": "telegram report"
     },
     {
       "id": "btc-breakeven",
@@ -83,8 +87,8 @@
       "level_usd_ref": 84059,
       "kind": "action",
       "message": "SELL the rest of your BTC at market now. Price is back at your entry (breakeven exit after T1).",
-      "status": "disabled",
-      "armed_at": null,
+      "status": "armed",
+      "armed_at": "2026-10-05T07:10:43Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
@@ -175,12 +179,13 @@
       "level": null,
       "kind": "watch",
       "message": "Heads-up: US CPI prints tomorrow (Tue 14 Oct) at 14:30 Lisbon. If you still hold BTC and T1 was not done, I'll tell you to sell tomorrow at 10:00. Nothing to do now.",
-      "status": "armed",
+      "status": "disabled",
       "armed_at": "2026-10-04T11:29:07Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
-      "on_done": null
+      "on_done": null,
+      "disabled_reason": "on_done of btc-t1"
     },
     {
       "id": "btc-cpi-exit",
@@ -191,7 +196,7 @@
       "kind": "action",
       "trade": "sell_all",
       "message": "SELL ALL your BTC at market now. US CPI prints today at 14:30 Lisbon and T1 was not reached, so the plan is to be out before it.",
-      "status": "armed",
+      "status": "disabled",
       "armed_at": "2026-10-04T11:29:07Z",
       "valid_from": null,
       "valid_until": null,
@@ -205,7 +210,8 @@
           "btc-t2",
           "btc-breakeven"
         ]
-      }
+      },
+      "disabled_reason": "on_done of btc-t1"
     }
   ]
 }

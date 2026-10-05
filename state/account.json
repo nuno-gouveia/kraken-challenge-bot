@@ -6,18 +6,18 @@
     "long_only": true,
     "stop_loss_orders": false
   },
-  "balance_usd": 1050.0,
+  "balance_usd": 1055.26,
   "balance_basis": "cost basis; equity varies with the open position",
-  "cash_usd": 630.0,
+  "cash_usd": 845.26,
   "positions": [
     {
       "id": "trade-2",
       "asset": "BTC",
       "side": "long",
-      "size_usd": 420.0,
+      "size_usd": 210.0,
       "entry_usd": 84065.0,
       "entry_eur_approx": 74612,
-      "qty_btc": 0.0049961,
+      "qty_btc": 0.00249805,
       "opened_at": "2026-10-02T18:44:00Z",
       "plan": {
         "exit_eur": 72800,
@@ -30,7 +30,16 @@
         "risk_usd_with_slippage": 11.42,
         "reward_risk": "1.67:1",
         "must_close_or_be_past_t1_before": "2026-10-14 (US CPI, tier one)"
-      }
+      },
+      "sells": [
+        {
+          "at": "2026-10-05T07:10:43Z",
+          "qty": 0.00249805,
+          "price_usd": 86170.0,
+          "cost_usd": 210.0,
+          "realised_usd": 5.26
+        }
+      ]
     }
   ],
   "closed_trades": [
@@ -43,7 +52,7 @@
       "result_usd": 20.89
     }
   ],
-  "last_confirmed_at": "2026-10-02T18:47:00Z",
-  "last_confirmed_via": "chat",
-  "last_confirmed_text": "Bought 420$ at 84065$"
+  "last_confirmed_at": "2026-10-05T07:10:43Z",
+  "last_confirmed_via": "telegram",
+  "last_confirmed_text": "/sold half at 86170$"
 }
