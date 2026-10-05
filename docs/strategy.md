@@ -88,12 +88,13 @@ Balance touches **$975**: stop trading, reassess, drop to 1% risk for the next t
 
 ## Brief format (the daily email)
 
-1. **"What to do, step by step" first**, numbered and grouped by day, before any analysis. Doing nothing is written as an instruction ("Hold, do not add"; "Do not buy anything, stay in cash").
-2. With the new system Nuno does **not** set alerts himself, so the brief says which alerts **the bot** is now watching, what each one will tell him to do, and which were removed and why (dead, spent, consumed by a fill, withdrawn).
-3. Account: balance, cash, position, unrealised P&L, room to target, room to floor, the survival check (also when the answer is "add nothing").
-4. Verdict and the reasoning: price action, technicals (from `data/snapshot.json`), news, macro calendar ("what prints today, after this email", plus the next five days), sentiment, flows, breadth.
-5. Dip setup score (which of the four steps), and Plan B with both versions priced.
-6. **"Reference levels (information only)"** block, clearly marked as not alerts.
-7. Readable on a phone. HTML plus plain-text. **No em dash characters.** Ends with "Not financial advice."
+**Changed with Nuno's agreement on 5 Oct 2026: the old brief's layout, made more concise.** The template, length limits and a worked example are in `docs/brief-format.md`. In short:
 
-Keep it as short as the day allows. Length follows how much changed, not habit.
+1. **The action first**, in capitals, then the verdict in one sentence.
+2. A compact **account** block: position, price, unrealised P&L, equity, balance and cash, room to target and floor. The survival check whenever a buy or add is on the table.
+3. **What to do, step by step**, numbered and grouped by day. Doing nothing is written as an instruction ("Hold, do not add").
+4. **The alerts the bot is watching**, what each one will tell him to do, and what was removed and why.
+5. **Why**: price, technicals, flows and sentiment, macro, breadth, one line each.
+6. Dip setup score and Plan B, one line each. **Reference levels (information only)** on one or two lines.
+7. At most 450 words on a busy day, about 250 on a quiet one. Readable on a phone. **No em dash characters.** Ends with "Not financial advice."
+
