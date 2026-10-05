@@ -50,8 +50,8 @@
       "level_usd_ref": 86820,
       "kind": "action",
       "message": "SELL HALF your BTC at market now (T1). The exit then moves up to breakeven.",
-      "status": "held",
-      "armed_at": "2026-10-02T18:47:00Z",
+      "status": "armed",
+      "armed_at": "2026-10-05T05:30:00Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
@@ -64,8 +64,10 @@
           "btc-warning"
         ]
       },
-      "held_at": "2026-10-04T23:30:45Z",
-      "held_first_touch_at": "2026-10-04T23:27:00Z"
+      "held_overnight": {
+        "first_touch_at": "2026-10-04T23:27:00Z",
+        "rechecked_at": "2026-10-05T05:30:00Z"
+      }
     },
     {
       "id": "btc-breakeven",
