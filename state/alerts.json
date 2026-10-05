@@ -53,7 +53,7 @@
       "kind": "action",
       "message": "SELL HALF your BTC at market now (T1). The exit then moves up to breakeven.",
       "status": "armed",
-      "armed_at": "2026-10-02T18:47:00Z",
+      "armed_at": "2026-10-05T05:30:00Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
@@ -67,6 +67,10 @@
           "btc-cpi-eve",
           "btc-cpi-exit"
         ]
+      },
+      "held_overnight": {
+        "first_touch_at": "2026-10-04T23:27:00Z",
+        "rechecked_at": "2026-10-05T05:30:00Z"
       }
     },
     {
@@ -136,12 +140,14 @@
       "level_usd_ref": 87045,
       "kind": "watch",
       "message": "Watch level: BTC is above EUR 77,250 (R2 $87,000). Nothing to do.",
-      "status": "armed",
+      "status": "fired",
       "armed_at": "2026-10-02T21:45:00Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
-      "on_done": null
+      "on_done": null,
+      "fired_at": "2026-10-05T01:20:44Z",
+      "fired_source": "kraken"
     },
     {
       "id": "test-20261002T2209",
