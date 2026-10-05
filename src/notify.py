@@ -18,7 +18,7 @@ from pathlib import Path
 import requests
 
 from src import alerts, kraken, quiet_hours, telegram
-from src.messages import NFA, escape, lisbon, listing_order, num, trigger
+from src.messages import NFA, both, escape, lisbon, listing_order, num, trigger
 
 
 def live(doc: dict) -> dict[str, dict]:
@@ -51,25 +51,58 @@ def changes(before: dict | None, after: dict) -> list[str]:
     return out
 
 
-def message(doc: dict, before: dict | None, last: dict[str, float] | None, now: float) -> str:
+def condition(a: dict, rate: float | None, eur: float | None, now: float) -> str:
+    """When an alert would go off, in words: "BTC rises to EUR 78,200 / $87,483 (2.4% away)"."""
+    if alerts.is_timed(a):
+        return f"it is {lisbon(alerts.parse_ts(a['at']), now)} Lisbon"
+    quote = a["pair"][-3:]
+    level = both(a["level"], quote, rate) if rate else f"{quote} {num(a['level'])}"
+    dist = f" ({abs(a['level'] / eur - 1) * 100:.1f}% away)" if eur and a["pair"] == "XBTEUR" else ""
+    move = "falls to" if a["direction"] == "below" else "rises to"
+    return f"{alerts.pair_asset(a['pair'])} {move} {level}{dist}"
+
+
+def holdings(account: dict | None) -> str | None:
+    if not account:
+        return None
+    held = []
+    for pos in account.get("positions", []):
+        name = pos.get("asset", "?")
+        qty = pos.get("qty", pos.get(f"qty_{name.lower()}"))
+        size = pos.get("size_usd")
+        if isinstance(qty, (int, float)) and isinstance(size, (int, float)):
+            held.append(f"{qty:g} {name}, bought for ${size:,.2f}")
+    if held:
+        return "You hold: " + "; ".join(held) + "."
+    cash = account.get("cash_usd")
+    return "You hold no position" + (f", all cash (${cash:,.2f})." if isinstance(cash, (int, float)) else ".")
+
+
+def message(doc: dict, before: dict | None, last: dict[str, float] | None, now: float,
+            account: dict | None = None) -> str:
+    """A list of what could happen, never a list of orders: every alert is
+    written as "if this, you'll be told that", and nothing in it is to do now."""
     rate = last["XBTUSD"] / last["XBTEUR"] if last else doc.get("eur_usd")
     eur = last["XBTEUR"] if last else None
     alerts_now = sorted(live(doc).values(), key=listing_order)
-    lines = [f"<b>Today's alerts are set</b> ({lisbon(now, now)} Lisbon, by {escape(str(doc.get('updated_by', '?')))})"]
+    lines = [f"<b>Alerts updated. Nothing to do now.</b> ({lisbon(now, now)} Lisbon, by "
+             f"{escape(str(doc.get('updated_by', '?')))})"]
+    held = holdings(account)
+    if held:
+        lines.append(escape(held))
     if eur:
         lines.append(f"BTC now EUR {num(eur)} / ${num(eur * rate)} (Kraken, EUR/USD {rate:.4f}).")
     if not alerts_now:
         lines.append("No alerts are set: nothing is being watched.")
-    for kind, title in (("action", "Action (you'll be asked to act)"), ("watch", "Watch only (silent)")):
+    for kind, title in (("action", "You'll be told to act only if:"), ("watch", "Silent notes, nothing to do, if:")):
         group = [a for a in alerts_now if a.get("kind") == kind]
         if not group:
             continue
+        lines.append("")
         lines.append(f"<b>{title}</b>")
         for a in group:
-            dist = ""
-            if eur and a["pair"] == "XBTEUR" and not alerts.is_timed(a):
-                dist = f", {abs(a['level'] / eur - 1) * 100:.1f}% away"
-            lines.append(f"- {trigger(a, rate, now)}{dist}: {escape(a['message'])}")
+            lines.append(f"- {condition(a, rate, eur, now)}: \"{escape(a['message'])}\"")
+    lines.append("")
     diff = changes(before, doc)
     if diff:
         lines.append("Changed: " + "; ".join(diff) + ".")
@@ -103,7 +136,11 @@ def main(argv: list[str] | None = None) -> int:
         print(f"notify: {exc}")
         last = None
     now = time.time()
-    text = message(doc, before, last, now)
+    try:
+        account = json.loads((args.alerts.parent / "account.json").read_text())
+    except (OSError, ValueError):
+        account = None
+    text = message(doc, before, last, now, account)
     if args.dry_run:
         print(text)
         return 0
