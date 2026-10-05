@@ -255,3 +255,10 @@ def test_heartbeat_dry_run_does_not_store_reports(state):
     run(state, notifier=notifier, write_state=False)
     assert notifier.sent
     assert {p.name: p.read_text() for p in state.iterdir()} == before
+
+
+def test_a_coin_quantity_is_refused_not_read_as_dollars(state):
+    before = read(state, "account.json")
+    notifier, _ = reply_to(state, msg(5, "/sold 0.0025 at 86600"))
+    assert "Nothing recorded: 0.0025 looks like a BTC quantity" in notifier.sent[0][0]
+    assert read(state, "account.json") == before
