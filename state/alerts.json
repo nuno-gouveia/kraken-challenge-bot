@@ -132,12 +132,14 @@
       "level_usd_ref": 87045,
       "kind": "watch",
       "message": "Watch level: BTC is above EUR 77,250 (R2 $87,000). Nothing to do.",
-      "status": "armed",
+      "status": "fired",
       "armed_at": "2026-10-02T21:45:00Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
-      "on_done": null
+      "on_done": null,
+      "fired_at": "2026-10-05T01:20:44Z",
+      "fired_source": "kraken"
     },
     {
       "id": "test-20261002T2209",
