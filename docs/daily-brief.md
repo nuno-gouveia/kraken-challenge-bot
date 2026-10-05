@@ -63,7 +63,7 @@ python -m src.validate_alerts state/alerts.json        # or state/alerts.propose
 
 ## 6. Write the brief
 
-`analyses/YYYY-MM-DD-brief.md` (today's UTC date), in the format of `docs/strategy.md`, "Brief format". Section 2 of that format ("which alerts the bot is now watching") lists every live alert with its level in EUR and USD, what it will tell Nuno to do, and which alerts were removed and why. Every price in EUR and USD, with the EUR/USD rate (from the snapshot). Lisbon times. No em dash. Ends with "Not financial advice."
+`analyses/YYYY-MM-DD-brief.md` (today's UTC date), **exactly in the format and within the length limits of `docs/brief-format.md`** (the old brief's layout, made shorter: at most 450 words on a busy day). The ALERTS section lists every live alert with its level in EUR and USD and what it will tell Nuno, plus what was removed and why. Every price in EUR and USD, with the EUR/USD rate. Lisbon times. No em dash. Ends with "Not financial advice." Before committing, count the words (`wc -w`) and cut until it fits.
 
 ## 7. Commit and push to main
 
@@ -83,4 +83,4 @@ Telegram reports can arrive while you write. Right before the email, start `hear
 
 ## 8. Email
 
-With the Gmail connector, to Nuno's own address (the connected account; find it from the From header of the newest message in Sent; never write it into the repo). Subject: `Kraken challenge, <D Mon>: <verdict>` (with the shadow prefix in shadow mode). Body: the brief, HTML if the tool takes it, otherwise plain text that reads well on a phone. No em dash. Ends with "Not financial advice."
+With the Gmail connector, to Nuno's own address (the connected account; find it from the From header of the newest message in Sent; never write it into the repo). Subject as in `docs/brief-format.md`: `BTC brief <D Mon> - <ACTION>: <reason>` (with the shadow prefix in shadow mode). Body: the brief, HTML if the tool takes it, otherwise plain text that reads well on a phone. No em dash. Ends with "Not financial advice."
