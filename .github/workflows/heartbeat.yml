@@ -21,6 +21,7 @@ concurrency:
 
 permissions:
   contents: write
+  actions: read  # src/gaps.py: when did the last heartbeat succeed?
 
 jobs:
   heartbeat:
@@ -49,6 +50,7 @@ jobs:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           CMC_API_KEY: ${{ secrets.CMC_API_KEY }}
+          GITHUB_TOKEN: ${{ github.token }}
           HEARTBEAT_DRY_RUN: ${{ inputs.dry_run && '1' || '' }}
         run: python -m src.heartbeat --summary-file "$RUNNER_TEMP/commit-msg"
 

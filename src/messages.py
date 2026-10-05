@@ -265,6 +265,27 @@ def morning_message(entries: list[tuple[dict, float, float, bool]], prices, now:
     return "\n".join(lines)
 
 
+def gap_message(down_from: float, down_to: float, now: float, watched: bool, checked: bool,
+                touched: list[str]) -> str:
+    """The first run after GitHub didn't run the heartbeat for a while."""
+    lines = [
+        f"<b>Checks were down from {lisbon(down_from, now)} to {lisbon(down_to, now)} Lisbon.</b> "
+        "GitHub did not run me, so your alerts were not watched in that time."
+    ]
+    if not watched:
+        lines.append("No price alerts were armed, so nothing was missed.")
+    elif not checked:
+        lines.append("I can't read prices on this run either, so that window is not checked yet. "
+                     "It is checked as soon as prices come back.")
+    elif touched:
+        lines.append("I have now checked every price in that window. Alerts touched in it are in the "
+                     "messages just before this one (actions touched in quiet hours wait for 06:30).")
+    else:
+        lines.append("I have now checked every price in that window: nothing touched any of your alerts. "
+                     "Nothing to do.")
+    return "\n".join(lines)
+
+
 def outage_message(failures: int) -> str:
     return "\n".join([
         "<b>I can't read prices right now, your alerts are NOT being watched.</b>",
