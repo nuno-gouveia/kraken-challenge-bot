@@ -22,7 +22,7 @@ from pathlib import Path
 
 import requests
 
-from src import alerts, inbound, messages, prices as price_source, quiet_hours, telegram
+from src import alerts, gaps, inbound, messages, prices as price_source, quiet_hours, telegram
 
 FAILURES_BEFORE_OUTAGE = 3
 HEARTBEAT_DEFAULTS = {"price_failures": 0, "outage_notified": False, "alerts_problems": []}
@@ -130,9 +130,15 @@ def overnight_entries(overnight, hits, p, now):
 
 
 def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key: str | None,
-        now_fn=time.time, sleep=time.sleep, write: bool = True) -> list[str]:
-    """One heartbeat. Returns a summary of what changed, for the commit message."""
+        now_fn=time.time, sleep=time.sleep, write: bool = True, last_ok: float | None = None) -> list[str]:
+    """One heartbeat. Returns a summary of what changed, for the commit message.
+
+    last_ok: when the previous successful run finished (from GitHub). After a
+    gap of more than gaps.GAP_AFTER_S, Nuno is told once the window is checked.
+    """
     now = now_fn()
+    started = now
+    gap_from = last_ok if last_ok is not None and now - last_ok > gaps.GAP_AFTER_S else None
     quiet = quiet_hours.is_quiet(now)
     summary: list[str] = []
     hb_path, alerts_path = state_dir / "heartbeat.json", state_dir / "alerts.json"
@@ -177,6 +183,7 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
     due = [a for a in timed if alerts.due(a, now) and not (quiet and a["kind"] == "action")]
     held = [a for a in doc["alerts"] if isinstance(a, dict) and a.get("status") == "held"] if doc else []
     p = None
+    hits: list = []
     if live or (held and not quiet) or due:
         since: dict[str, int] = {}
         for a in live + held:
@@ -240,6 +247,13 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
             a.update(status="fired", fired_at=alerts.iso(now), fired_source=p.source if p else "clock")
             summary.append(f"fired {a['id']}")
 
+    if gap_from is not None:
+        watched = bool(live or held)
+        text = messages.gap_message(gap_from, started, now_fn(), watched=watched,
+                                    checked=p is not None, touched=[h.alert["id"] for h in hits])
+        if notifier.send(text, silent=quiet):
+            summary.append("gap notice")
+
     if write:
         if doc is not None and doc != doc_before:
             alerts.save(alerts_path, doc)
@@ -264,8 +278,11 @@ def main(argv: list[str] | None = None) -> int:
 
     session = requests.Session()
     notifier = Notifier(session, token, chat_id, args.dry_run)
+    gh_token, repo = os.environ.get("GITHUB_TOKEN"), os.environ.get("GITHUB_REPOSITORY")
+    last_ok = gaps.last_success_end(session, repo, gh_token, os.environ.get("GITHUB_RUN_ID")) \
+        if gh_token and repo else None
     summary = run(args.state_dir, notifier, session, os.environ.get("CMC_API_KEY") or None,
-                  write=not args.dry_run)
+                  write=not args.dry_run, last_ok=last_ok)
     if args.summary_file:
         args.summary_file.write_text("heartbeat: " + ("; ".join(summary) or "update state") + "\n")
     print("summary: " + ("; ".join(summary) or "nothing to report"))
