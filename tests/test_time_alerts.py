@@ -158,7 +158,7 @@ def test_notify_lists_time_alerts_and_moves(state):
     after["alerts"][-1]["at"] = "2026-10-14T08:00:00Z"
     text = notify.message(after, before, {"XBTEUR": 74550.1, "XBTUSD": 84000.0}, NOW)
     assert_telegram_html(text)
-    assert "- at 14 Oct 09:00 Lisbon: SELL ALL your BTC at market now." in text
+    assert '- it is 14 Oct 09:00 Lisbon: "SELL ALL your BTC at market now.' in text
     assert "btc-cpi moved from at 14 Oct 10:00 Lisbon to at 14 Oct 09:00 Lisbon" in text
 
 

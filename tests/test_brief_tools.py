@@ -34,13 +34,22 @@ def test_notify_lists_alerts_and_changes(state):
     after["alerts"][0]["level"] = 72500
     after["alerts"] = [a for a in after["alerts"] if a["id"] != "btc-watch-high"]
     after["updated_by"] = "claude (daily brief)"
-    text = notify.message(after, before, {"XBTEUR": 74550.1, "XBTUSD": 84000.0}, NOW)
+    text = notify.message(after, before, {"XBTEUR": 74550.1, "XBTUSD": 84000.0}, NOW, read(state, "account.json"))
     assert_telegram_html(text)
-    assert text.startswith("<b>Today's alerts are set</b> (13:00 Lisbon, by claude (daily brief))")
-    assert "<b>Action (you'll be asked to act)</b>\n- above EUR 78,200 / $88,113, 4.9% away: SELL the rest" in text
-    assert "- below EUR 72,500 / $81,690, 2.7% away: SELL ALL your BTC" in text
+    assert text.startswith("<b>Alerts updated. Nothing to do now.</b> (13:00 Lisbon, by claude (daily brief))")
+    assert "\nYou hold: 0.0049961 BTC, bought for $420.00.\n" in text
+    assert "<b>You'll be told to act only if:</b>\n- BTC rises to EUR 78,200 / $88,113 (4.9% away): \"SELL" in text
+    assert '- BTC falls to EUR 72,500 / $81,690 (2.7% away): "SELL ALL your BTC' in text
+    assert "<b>Silent notes, nothing to do, if:</b>" in text
     assert "Changed: removed btc-watch-high; btc-exit moved from EUR 72,800 to EUR 72,500." in text
     assert text.endswith("Not financial advice.")
+
+
+def test_notify_says_when_there_is_no_position(state):
+    account = read(state, "account.json")
+    account["positions"] = []
+    text = notify.message(read(state, "alerts.json"), None, None, NOW, account)
+    assert "\nYou hold no position, all cash ($630.00).\n" in text
 
 
 def test_notify_skips_when_live_alerts_did_not_change(state, tmp_path, capsys):

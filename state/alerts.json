@@ -1,6 +1,6 @@
 {
   "updated_at": "2026-10-04T11:29:07Z",
-  "updated_by": "claude (CPI deadline as time alerts, asked by Nuno)",
+  "updated_by": "claude (wording fix, asked by Nuno)",
   "eur_usd": 1.1268,
   "note": "These mirror the alerts Nuno currently has in the Kraken app. Keep the app alerts on until the heartbeat is live and tested (SPEC.md milestone 5).",
   "alerts": [
@@ -100,7 +100,7 @@
       "level": 78200,
       "level_usd_ref": 88116,
       "kind": "action",
-      "message": "SELL the rest of your BTC at market now (T2). Trade complete.",
+      "message": "SELL ALL the BTC you still hold at market now (T2). Trade complete.",
       "status": "armed",
       "armed_at": "2026-10-02T18:47:00Z",
       "valid_from": null,
@@ -115,7 +115,8 @@
           "btc-cpi-eve",
           "btc-cpi-exit"
         ]
-      }
+      },
+      "trade": "sell_all"
     },
     {
       "id": "btc-watch-low",
