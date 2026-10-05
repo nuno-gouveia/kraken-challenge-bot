@@ -217,30 +217,44 @@ def gate_message(hit: Hit, prices, now: float) -> str:
     ])
 
 
+# What a held action would have asked for, and the verb to rule out: a
+# no-action update must never quote the alert's own "SELL ..." text.
+TRADE_WORDS = {"sell_half": ("sell half", "sell"), "sell_all": ("sell all", "sell"),
+               "buy": ("buy", "buy"), "none": ("action", "act")}
+
+
 def morning_message(entries: list[tuple[dict, float, float, bool]], prices, now: float) -> str:
     """One update at 06:30 for actions held overnight.
 
     entries: (alert, first touch time, overnight extreme, still through the level now)
+    The first line says whether anything is to be done, so it can't be misread half awake.
     """
+    due = any(still for *_, still in entries)
     lines = [
-        "<b>Morning update: actions held overnight (quiet hours 22:30 to 06:30 Lisbon).</b>",
-        "I assumed you did nothing overnight, and re-checked each one at 06:30:",
+        "<b>Morning update: an action is still due, see the next message.</b>" if due
+        else "<b>Morning update: nothing to do. Do not trade.</b>",
+        "While you slept (quiet hours 22:30 to 06:30 Lisbon) these levels were touched. "
+        "I re-checked each one at 06:30:",
     ]
     for a, first_at, extreme, still in entries:
         quote = a["pair"][-3:]
         below = a["direction"] == "below"
+        what, verb = TRADE_WORDS[trade_of(a)]
         lines.append("")
-        lines.append(f"<b>{escape(a['message'])}</b> (alert {escape(a['id'])})")
+        if still:
+            lines.append(f"<b>{escape(a['id'])} ({what}): still due.</b>")
+        else:
+            lines.append(f"<b>{escape(a['id'])} ({what}): NO action, do not {verb}.</b>")
         lines.append(
             f"Level {both(a['level'], quote, prices.eur_usd)}, first touched at {lisbon(first_at, now)}; "
             f"{'low' if below else 'high'} overnight {money(extreme, quote)}."
         )
         if still:
-            lines.append(f"Still {'below' if below else 'above'} the level: <b>the action stands</b>, see the next message.")
+            lines.append(f"Still {'below' if below else 'above'} the level at 06:30, so the action stands.")
         else:
             lines.append(
-                f"Back {'above' if below else 'below'} the level now: no action. "
-                "The alert is armed again from 06:30 and fires if the level is touched again."
+                f"Back {'above' if below else 'below'} the level at 06:30, so it did not fire. "
+                "It is armed again and fires if the level is touched again."
             )
     lines += [
         "",

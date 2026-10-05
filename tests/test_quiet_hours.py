@@ -55,9 +55,11 @@ def test_morning_recheck_price_recovered_no_action(state):
     assert summary == ["morning update"]
     [(text, silent)] = notifier.sent
     assert silent is False
-    assert text.startswith("<b>Morning update: actions held overnight")
+    assert text.startswith("<b>Morning update: nothing to do. Do not trade.</b>")
+    assert "<b>btc-exit (sell all): NO action, do not sell.</b>" in text
+    assert "SELL" not in text  # never quote the alert's instruction when there is nothing to do
     assert "first touched at 03:12; low overnight EUR 72,500." in text
-    assert "Back above the level now: no action. The alert is armed again from 06:30" in text
+    assert "Back above the level at 06:30, so it did not fire. It is armed again" in text
     assert "Today's brief re-plans the day." in text
     exit_alert = next(a for a in read(state, "alerts.json")["alerts"] if a["id"] == "btc-exit")
     assert exit_alert["status"] == "armed"
@@ -75,7 +77,8 @@ def test_morning_recheck_still_through_sends_the_action(state):
     notifier, summary = run(state, FakeKraken("ohlc_1m_morning_still_below.json", ticker="ticker_low.json"), now=MORNING)
     assert summary == ["morning update", "fired btc-exit"]
     (morning, _), (action, silent) = notifier.sent
-    assert "the action stands" in morning
+    assert morning.startswith("<b>Morning update: an action is still due, see the next message.</b>")
+    assert "<b>btc-exit (sell all): still due.</b>" in morning and "the action stands" in morning
     assert silent is False
     assert action.startswith("<b>ACTION: SELL ALL your BTC")
     assert "Held overnight: first touched at 03:12 (quiet hours), and still through the level at the 06:30 re-check." in action
