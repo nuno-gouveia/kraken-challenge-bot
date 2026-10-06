@@ -247,11 +247,18 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
             a.update(status="fired", fired_at=alerts.iso(now), fired_source=p.source if p else "clock")
             summary.append(f"fired {a['id']}")
 
+    # Never report a gap that starts before the end of the last one reported,
+    # whatever GitHub says (its run list has lagged by hours).
+    reported_to = alerts.parse_ts(hb.get("gap_reported_to"))
+    if gap_from is not None and reported_to is not None and gap_from < reported_to:
+        print("gaps: already reported, skipping")
+        gap_from = None
     if gap_from is not None:
         watched = bool(live or held)
         text = messages.gap_message(gap_from, started, now_fn(), watched=watched,
                                     checked=p is not None, touched=[h.alert["id"] for h in hits])
         if notifier.send(text, silent=quiet):
+            hb["gap_reported_to"] = alerts.iso(started)
             summary.append("gap notice")
 
     if write:

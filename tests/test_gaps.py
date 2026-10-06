@@ -89,17 +89,44 @@ class FakeGitHub:
         return FakeResponse(self.body)
 
 
-def test_last_success_skips_this_run():
+def test_last_success_is_the_newest_success_other_than_this_run():
     gh = FakeGitHub({"workflow_runs": [
-        {"id": 710, "updated_at": "2026-10-05T20:26:00Z"},
-        {"id": 709, "updated_at": "2026-10-05T20:21:34Z"},
+        {"id": 870, "conclusion": None, "updated_at": "2026-10-06T09:25:40Z"},  # this run, in progress
+        {"id": 869, "conclusion": "success", "updated_at": "2026-10-06T09:20:47Z"},
+        {"id": 868, "conclusion": "cancelled", "updated_at": "2026-10-06T09:21:00Z"},
+        {"id": 700, "conclusion": "success", "updated_at": "2026-10-06T02:00:00Z"},
     ]})
-    assert gaps.last_success_end(gh, "owner/repo", "tok", "710") == T("2026-10-05T20:21:34")
+    assert gaps.last_success_end(gh, "owner/repo", "tok", "870") == T("2026-10-06T09:20:47")
     url, params, headers = gh.calls[0]
     assert url.endswith("/repos/owner/repo/actions/workflows/heartbeat.yml/runs")
-    assert params["status"] == "success"
+    assert "status" not in params  # the status-filtered list lags behind
+
+
+def test_no_recent_success_means_unknown_not_a_gap():
+    gh = FakeGitHub({"workflow_runs": [{"id": 5, "conclusion": "failure", "updated_at": "2026-10-06T09:20:47Z"}]})
+    assert gaps.last_success_end(gh, "o/r", "tok", "6") is None
 
 
 def test_last_success_unknown_when_github_fails(capsys):
     assert gaps.last_success_end(FakeGitHub(error=requests.ConnectionError("x")), "o/r", "tok", "1") is None
     assert "tok" not in capsys.readouterr().out
+
+
+def test_a_gap_is_reported_once_even_if_github_keeps_returning_the_same_old_run(state):
+    rearm(state)
+    old_success = NOW - 7 * 3600
+    for i in range(3):
+        notifier = FakeNotifier()
+        heartbeat.run(state, notifier, FakeKraken(), None, now_fn=lambda: NOW + i * 300,
+                      sleep=lambda _: None, last_ok=old_success)
+        assert len(gap_texts(notifier)) == (1 if i == 0 else 0)
+
+
+def test_a_new_gap_after_one_was_reported_is_reported(state):
+    rearm(state)
+    run_with_gap(state, minutes=50)
+    notifier = FakeNotifier()
+    later = NOW + 3 * 3600
+    heartbeat.run(state, notifier, FakeKraken(), None, now_fn=lambda: later, sleep=lambda _: None,
+                  last_ok=later - 40 * 60)
+    assert len(gap_texts(notifier)) == 1
