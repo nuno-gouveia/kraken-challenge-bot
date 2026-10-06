@@ -1,83 +1,83 @@
 {
-  "fetched_at": "2026-10-05T14:42:43Z",
+  "fetched_at": "2026-10-06T07:03:46Z",
   "source": "Kraken public API (OHLC 1440 and 60 minute)",
   "notes": "Daily indicators use closed UTC daily candles only; open_candle is today's, still moving. change_24h_pct is against the open of the hourly candle 24 hours back; change_7d_pct against the daily close seven days back.",
-  "eur_usd": 1.11971,
+  "eur_usd": 1.12072,
   "assets": {
     "BTC": {
       "USD": {
         "pair": "XBTUSD",
-        "last": 85772.8,
-        "change_24h_pct": 0.64,
-        "high_24h": 86973.6,
-        "low_24h": 85166.0,
-        "change_7d_pct": 1.57,
+        "last": 85262.4,
+        "change_24h_pct": -1.12,
+        "high_24h": 86701.8,
+        "low_24h": 84965.7,
+        "change_7d_pct": 2.16,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 86506.6,
-          "high": 86973.6,
-          "low": 85394.0,
-          "last": 85772.2
+          "date": "2026-10-06",
+          "open": 85751.5,
+          "high": 86125.8,
+          "low": 85110.1,
+          "last": 85262.4
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 86510.4,
+          "last_closed_date": "2026-10-05",
+          "last_close": 85751.5,
           "closed_candles": 720,
-          "rsi14": 68.61,
-          "atr14": 2205.5,
-          "atr14_pct": 2.55,
-          "ema20": 83032.38,
-          "ema50": 78872.576,
-          "ema200": 74858.436,
+          "rsi14": 64.56,
+          "atr14": 2191.38,
+          "atr14_pct": 2.56,
+          "ema20": 83291.344,
+          "ema50": 79142.337,
+          "ema200": 74967.297,
           "bollinger_20_2": {
-            "middle": 82856.755,
-            "upper": 89352.212,
-            "lower": 76361.298,
-            "width_pct": 15.68,
-            "percent_b": 0.781
+            "middle": 83365.075,
+            "upper": 89044.68,
+            "lower": 77685.47,
+            "width_pct": 13.63,
+            "percent_b": 0.71
           },
           "macd_12_26_9": {
-            "macd": 2016.13,
-            "signal": 2079.05,
-            "histogram": -62.9176
+            "macd": 1993.01,
+            "signal": 2061.84,
+            "histogram": -68.831
           }
         }
       },
       "EUR": {
         "pair": "XBTEUR",
-        "last": 76603.0,
-        "change_24h_pct": 1.09,
+        "last": 76078.0,
+        "change_24h_pct": -1.27,
         "high_24h": 77485.5,
-        "low_24h": 75724.1,
-        "change_7d_pct": 3.21,
+        "low_24h": 75821.0,
+        "change_7d_pct": 3.63,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 76885.0,
-          "high": 77485.5,
-          "low": 76331.3,
-          "last": 76603.0
+          "date": "2026-10-06",
+          "open": 76459.7,
+          "high": 76716.0,
+          "low": 75958.1,
+          "last": 76078.0
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 76887.5,
+          "last_closed_date": "2026-10-05",
+          "last_close": 76462.2,
           "closed_candles": 720,
-          "rsi14": 72.8,
-          "atr14": 1939.9,
-          "atr14_pct": 2.52,
-          "ema20": 73015.456,
-          "ema50": 68846.356,
-          "ema200": 64873.769,
+          "rsi14": 70.07,
+          "atr14": 1920.23,
+          "atr14_pct": 2.51,
+          "ema20": 73343.718,
+          "ema50": 69145.017,
+          "ema200": 64989.702,
           "bollinger_20_2": {
-            "middle": 72764.73,
-            "upper": 79221.302,
-            "lower": 66308.158,
-            "width_pct": 17.75,
-            "percent_b": 0.819
+            "middle": 73311.39,
+            "upper": 79034.595,
+            "lower": 67588.185,
+            "width_pct": 15.61,
+            "percent_b": 0.775
           },
           "macd_12_26_9": {
-            "macd": 2261.07,
-            "signal": 2222.16,
-            "histogram": 38.9056
+            "macd": 2263.49,
+            "signal": 2230.43,
+            "histogram": 33.0613
           }
         }
       }
@@ -85,77 +85,77 @@
     "ETH": {
       "USD": {
         "pair": "ETHUSD",
-        "last": 2705.64,
-        "change_24h_pct": 0.25,
-        "high_24h": 2738.82,
-        "low_24h": 2693.67,
-        "change_7d_pct": 0.66,
+        "last": 2695.8,
+        "change_24h_pct": -1.07,
+        "high_24h": 2733.31,
+        "low_24h": 2678.88,
+        "change_7d_pct": 0.31,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 2726.03,
-          "high": 2737.16,
-          "low": 2693.67,
-          "last": 2705.64
+          "date": "2026-10-06",
+          "open": 2709.72,
+          "high": 2722.94,
+          "low": 2689.62,
+          "last": 2695.8
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 2726.49,
+          "last_closed_date": "2026-10-05",
+          "last_close": 2709.39,
           "closed_candles": 720,
-          "rsi14": 63.92,
-          "atr14": 84.6632,
-          "atr14_pct": 3.11,
-          "ema20": 2644.7694,
-          "ema50": 2483.1927,
-          "ema200": 2285.5463,
+          "rsi14": 61.45,
+          "atr14": 82.7787,
+          "atr14_pct": 3.06,
+          "ema20": 2650.9237,
+          "ema50": 2492.0632,
+          "ema200": 2289.7912,
           "bollinger_20_2": {
-            "middle": 2647.8405,
-            "upper": 2853.0734,
-            "lower": 2442.6076,
-            "width_pct": 15.5,
-            "percent_b": 0.692
+            "middle": 2663.4895,
+            "upper": 2834.531,
+            "lower": 2492.448,
+            "width_pct": 12.84,
+            "percent_b": 0.634
           },
           "macd_12_26_9": {
-            "macd": 66.0252,
-            "signal": 75.7119,
-            "histogram": -9.68675
+            "macd": 63.5048,
+            "signal": 73.2705,
+            "histogram": -9.76574
           }
         }
       },
       "EUR": {
         "pair": "ETHEUR",
-        "last": 2416.74,
-        "change_24h_pct": 0.72,
-        "high_24h": 2445.0,
-        "low_24h": 2396.96,
-        "change_7d_pct": 2.33,
+        "last": 2405.01,
+        "change_24h_pct": -1.21,
+        "high_24h": 2440.74,
+        "low_24h": 2391.33,
+        "change_7d_pct": 1.74,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 2422.01,
-          "high": 2445.0,
-          "low": 2408.02,
-          "last": 2416.74
+          "date": "2026-10-06",
+          "open": 2416.34,
+          "high": 2425.81,
+          "low": 2400.16,
+          "last": 2405.01
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 2422.99,
+          "last_closed_date": "2026-10-05",
+          "last_close": 2415.64,
           "closed_candles": 720,
-          "rsi14": 68.23,
-          "atr14": 74.2646,
-          "atr14_pct": 3.06,
-          "ema20": 2325.665,
-          "ema50": 2167.6218,
-          "ema200": 1980.4704,
+          "rsi14": 66.91,
+          "atr14": 72.7936,
+          "atr14_pct": 3.01,
+          "ema20": 2334.234,
+          "ema50": 2177.348,
+          "ema200": 1984.8312,
           "bollinger_20_2": {
-            "middle": 2325.248,
-            "upper": 2525.6647,
-            "lower": 2124.8313,
-            "width_pct": 17.24,
-            "percent_b": 0.744
+            "middle": 2342.135,
+            "upper": 2510.7295,
+            "lower": 2173.5405,
+            "width_pct": 14.4,
+            "percent_b": 0.718
           },
           "macd_12_26_9": {
-            "macd": 73.5202,
-            "signal": 79.01,
-            "histogram": -5.48983
+            "macd": 72.0002,
+            "signal": 77.6081,
+            "histogram": -5.60787
           }
         }
       }
@@ -163,77 +163,77 @@
     "LINK": {
       "USD": {
         "pair": "LINKUSD",
-        "last": 13.94166,
-        "change_24h_pct": -1.04,
-        "high_24h": 14.3204,
-        "low_24h": 13.88373,
-        "change_7d_pct": -0.56,
+        "last": 13.83499,
+        "change_24h_pct": -2.45,
+        "high_24h": 14.24542,
+        "low_24h": 13.66589,
+        "change_7d_pct": -10.37,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 14.27403,
-          "high": 14.27853,
-          "low": 13.88373,
-          "last": 13.94166
+          "date": "2026-10-06",
+          "open": 13.85368,
+          "high": 13.92181,
+          "low": 13.72376,
+          "last": 13.83499
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 14.27621,
+          "last_closed_date": "2026-10-05",
+          "last_close": 13.855,
           "closed_candles": 720,
-          "rsi14": 60.34,
-          "atr14": 0.819205,
-          "atr14_pct": 5.74,
-          "ema20": 13.481185,
-          "ema50": 12.194975,
-          "ema200": 10.635502,
+          "rsi14": 56.07,
+          "atr14": 0.80445,
+          "atr14_pct": 5.81,
+          "ema20": 13.516787,
+          "ema50": 12.260074,
+          "ema200": 10.667789,
           "bollinger_20_2": {
-            "middle": 13.26753,
-            "upper": 15.723564,
-            "lower": 10.811495,
-            "width_pct": 37.02,
-            "percent_b": 0.705
+            "middle": 13.41634,
+            "upper": 15.62345,
+            "lower": 11.20923,
+            "width_pct": 32.9,
+            "percent_b": 0.599
           },
           "macd_12_26_9": {
-            "macd": 0.737431,
-            "signal": 0.740247,
-            "histogram": -0.00281551
+            "macd": 0.677752,
+            "signal": 0.727748,
+            "histogram": -0.0499959
           }
         }
       },
       "EUR": {
         "pair": "LINKEUR",
-        "last": 12.45212,
-        "change_24h_pct": -0.56,
-        "high_24h": 12.74551,
-        "low_24h": 12.40581,
-        "change_7d_pct": 1.1,
+        "last": 12.33916,
+        "change_24h_pct": -2.61,
+        "high_24h": 12.71822,
+        "low_24h": 12.20001,
+        "change_7d_pct": -9.11,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 12.67548,
-          "high": 12.74551,
-          "low": 12.40581,
-          "last": 12.45212
+          "date": "2026-10-06",
+          "open": 12.35398,
+          "high": 12.39323,
+          "low": 12.23136,
+          "last": 12.33916
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 12.68198,
+          "last_closed_date": "2026-10-05",
+          "last_close": 12.36066,
           "closed_candles": 720,
-          "rsi14": 61.98,
-          "atr14": 0.693661,
-          "atr14_pct": 5.47,
-          "ema20": 11.857151,
-          "ema50": 10.648355,
-          "ema200": 9.2205734,
+          "rsi14": 58.13,
+          "atr14": 0.683078,
+          "atr14_pct": 5.53,
+          "ema20": 11.905104,
+          "ema50": 10.715504,
+          "ema200": 9.2520852,
           "bollinger_20_2": {
-            "middle": 11.653495,
-            "upper": 13.942651,
-            "lower": 9.3643394,
-            "width_pct": 39.29,
-            "percent_b": 0.725
+            "middle": 11.799322,
+            "upper": 13.867875,
+            "lower": 9.7307697,
+            "width_pct": 35.06,
+            "percent_b": 0.636
           },
           "macd_12_26_9": {
-            "macd": 0.725022,
-            "signal": 0.711399,
-            "histogram": 0.0136225
+            "macd": 0.676823,
+            "signal": 0.704484,
+            "histogram": -0.0276611
           }
         }
       }
@@ -241,77 +241,77 @@
     "BCH": {
       "USD": {
         "pair": "BCHUSD",
-        "last": 314.03,
-        "change_24h_pct": -1.32,
-        "high_24h": 321.51,
+        "last": 315.28,
+        "change_24h_pct": -1.21,
+        "high_24h": 319.2,
         "low_24h": 312.62,
-        "change_7d_pct": -5.55,
+        "change_7d_pct": 1.64,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 318.75,
-          "high": 321.51,
-          "low": 312.62,
-          "last": 314.03
+          "date": "2026-10-06",
+          "open": 316.46,
+          "high": 316.84,
+          "low": 313.67,
+          "last": 315.28
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 318.88,
+          "last_closed_date": "2026-10-05",
+          "last_close": 316.85,
           "closed_candles": 720,
-          "rsi14": 63.23,
-          "atr14": 18.4085,
-          "atr14_pct": 5.77,
-          "ema20": 299.50948,
-          "ema50": 273.41088,
-          "ema200": 309.926,
+          "rsi14": 62.03,
+          "atr14": 17.7286,
+          "atr14_pct": 5.6,
+          "ema20": 301.16096,
+          "ema50": 275.11438,
+          "ema200": 309.99688,
           "bollinger_20_2": {
-            "middle": 295.863,
-            "upper": 379.27151,
-            "lower": 212.45449,
-            "width_pct": 56.38,
-            "percent_b": 0.638
+            "middle": 300.854,
+            "upper": 376.3689,
+            "lower": 225.3391,
+            "width_pct": 50.2,
+            "percent_b": 0.606
           },
           "macd_12_26_9": {
-            "macd": 18.069,
-            "signal": 19.014,
-            "histogram": -0.945012
+            "macd": 17.2502,
+            "signal": 18.6613,
+            "histogram": -1.41106
           }
         }
       },
       "EUR": {
         "pair": "BCHEUR",
-        "last": 280.47,
-        "change_24h_pct": -0.92,
-        "high_24h": 286.96,
-        "low_24h": 279.5,
-        "change_7d_pct": -4.04,
+        "last": 281.23,
+        "change_24h_pct": -1.29,
+        "high_24h": 285.03,
+        "low_24h": 279.41,
+        "change_7d_pct": 2.97,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 282.71,
-          "high": 286.96,
-          "low": 279.5,
-          "last": 280.47
+          "date": "2026-10-06",
+          "open": 282.21,
+          "high": 282.57,
+          "low": 280.31,
+          "last": 281.23
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 283.43,
+          "last_closed_date": "2026-10-05",
+          "last_close": 282.08,
           "closed_candles": 720,
-          "rsi14": 65.12,
-          "atr14": 16.0089,
-          "atr14_pct": 5.65,
-          "ema20": 263.59222,
-          "ema50": 238.82305,
-          "ema200": 268.07864,
+          "rsi14": 64.18,
+          "atr14": 15.4047,
+          "atr14_pct": 5.46,
+          "ema20": 265.35296,
+          "ema50": 240.5194,
+          "ema200": 268.22059,
           "bollinger_20_2": {
-            "middle": 260.07,
-            "upper": 335.72701,
-            "lower": 184.41299,
-            "width_pct": 58.18,
-            "percent_b": 0.654
+            "middle": 264.767,
+            "upper": 333.30778,
+            "lower": 196.22622,
+            "width_pct": 51.77,
+            "percent_b": 0.626
           },
           "macd_12_26_9": {
-            "macd": 17.576,
-            "signal": 18.0798,
-            "histogram": -0.503791
+            "macd": 16.9022,
+            "signal": 17.8443,
+            "histogram": -0.942057
           }
         }
       }
@@ -319,77 +319,77 @@
     "DOGE": {
       "USD": {
         "pair": "XDGUSD",
-        "last": 0.0952574,
-        "change_24h_pct": 1.79,
-        "high_24h": 0.0975602,
-        "low_24h": 0.0939904,
-        "change_7d_pct": -1.63,
+        "last": 0.0942932,
+        "change_24h_pct": -1.8,
+        "high_24h": 0.0971031,
+        "low_24h": 0.0937655,
+        "change_7d_pct": 0.41,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 0.0959094,
-          "high": 0.0971031,
-          "low": 0.094719,
-          "last": 0.0952574
+          "date": "2026-10-06",
+          "open": 0.0954009,
+          "high": 0.095557,
+          "low": 0.0940646,
+          "last": 0.0942932
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 0.0959079,
+          "last_closed_date": "2026-10-05",
+          "last_close": 0.0954385,
           "closed_candles": 720,
-          "rsi14": 58.4,
-          "atr14": 0.00521271,
-          "atr14_pct": 5.44,
-          "ema20": 0.09252292,
-          "ema50": 0.087866455,
-          "ema200": 0.093494726,
+          "rsi14": 57.43,
+          "atr14": 0.00507877,
+          "atr14_pct": 5.32,
+          "ema20": 0.092800595,
+          "ema50": 0.088163398,
+          "ema200": 0.093520496,
           "bollinger_20_2": {
-            "middle": 0.092221915,
-            "upper": 0.10416234,
-            "lower": 0.080281487,
-            "width_pct": 25.89,
-            "percent_b": 0.654
+            "middle": 0.092992505,
+            "upper": 0.1036002,
+            "lower": 0.082384809,
+            "width_pct": 22.81,
+            "percent_b": 0.615
           },
           "macd_12_26_9": {
-            "macd": 0.00244208,
-            "signal": 0.00280816,
-            "histogram": -0.000366077
+            "macd": 0.00238568,
+            "signal": 0.00272366,
+            "histogram": -0.000337986
           }
         }
       },
       "EUR": {
         "pair": "XDGEUR",
-        "last": 0.085092,
-        "change_24h_pct": 2.27,
+        "last": 0.0841124,
+        "change_24h_pct": -1.94,
         "high_24h": 0.0867001,
-        "low_24h": 0.0835835,
-        "change_7d_pct": -0.03,
+        "low_24h": 0.083774,
+        "change_7d_pct": 1.81,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 0.0851634,
-          "high": 0.0867001,
-          "low": 0.0847391,
-          "last": 0.085092
+          "date": "2026-10-06",
+          "open": 0.0851217,
+          "high": 0.0851217,
+          "low": 0.0839699,
+          "last": 0.0841124
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 0.0851831,
+          "last_closed_date": "2026-10-05",
+          "last_close": 0.0850805,
           "closed_candles": 720,
-          "rsi14": 60.66,
-          "atr14": 0.00447345,
-          "atr14_pct": 5.25,
-          "ema20": 0.081350946,
-          "ema50": 0.076691231,
-          "ema200": 0.081027292,
+          "rsi14": 60.4,
+          "atr14": 0.00436292,
+          "atr14_pct": 5.13,
+          "ema20": 0.081706141,
+          "ema50": 0.077020221,
+          "ema200": 0.081074068,
           "bollinger_20_2": {
-            "middle": 0.08098348,
-            "upper": 0.092081401,
-            "lower": 0.069885559,
-            "width_pct": 27.41,
-            "percent_b": 0.689
+            "middle": 0.08176817,
+            "upper": 0.091625195,
+            "lower": 0.071911145,
+            "width_pct": 24.11,
+            "percent_b": 0.668
           },
           "macd_12_26_9": {
-            "macd": 0.00268123,
-            "signal": 0.00290121,
-            "histogram": -0.000219974
+            "macd": 0.00265745,
+            "signal": 0.00285246,
+            "histogram": -0.000195006
           }
         }
       }
@@ -397,77 +397,77 @@
     "SHIB": {
       "USD": {
         "pair": "SHIBUSD",
-        "last": 5.884e-06,
-        "change_24h_pct": 3.37,
+        "last": 5.842e-06,
+        "change_24h_pct": -1.35,
         "high_24h": 6.042e-06,
-        "low_24h": 5.705e-06,
-        "change_7d_pct": -0.54,
+        "low_24h": 5.805e-06,
+        "change_7d_pct": 2.8,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 5.909e-06,
-          "high": 6.042e-06,
-          "low": 5.845e-06,
-          "last": 5.88e-06
+          "date": "2026-10-06",
+          "open": 5.877e-06,
+          "high": 5.893e-06,
+          "low": 5.805e-06,
+          "last": 5.842e-06
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 5.916e-06,
+          "last_closed_date": "2026-10-05",
+          "last_close": 5.883e-06,
           "closed_candles": 720,
-          "rsi14": 59.24,
-          "atr14": 3.1739e-07,
-          "atr14_pct": 5.36,
-          "ema20": 5.6787379e-06,
-          "ema50": 5.4076053e-06,
-          "ema200": 5.6615173e-06,
+          "rsi14": 58.1,
+          "atr14": 3.08934e-07,
+          "atr14_pct": 5.25,
+          "ema20": 5.6981914e-06,
+          "ema50": 5.4262482e-06,
+          "ema200": 5.663882e-06,
           "bollinger_20_2": {
-            "middle": 5.66385e-06,
-            "upper": 6.3017686e-06,
-            "lower": 5.0259314e-06,
-            "width_pct": 22.53,
-            "percent_b": 0.698
+            "middle": 5.711e-06,
+            "upper": 6.2613283e-06,
+            "lower": 5.1606717e-06,
+            "width_pct": 19.27,
+            "percent_b": 0.656
           },
           "macd_12_26_9": {
-            "macd": 1.45313e-07,
-            "signal": 1.58137e-07,
-            "histogram": -1.28237e-08
+            "macd": 1.44256e-07,
+            "signal": 1.55361e-07,
+            "histogram": -1.11051e-08
           }
         }
       },
       "EUR": {
         "pair": "SHIBEUR",
-        "last": 5.253e-06,
-        "change_24h_pct": 3.79,
+        "last": 5.214e-06,
+        "change_24h_pct": -1.53,
         "high_24h": 5.363e-06,
-        "low_24h": 5.072e-06,
-        "change_7d_pct": 0.96,
+        "low_24h": 5.172e-06,
+        "change_7d_pct": 4.32,
         "open_candle": {
-          "date": "2026-10-05",
-          "open": 5.239e-06,
-          "high": 5.363e-06,
-          "low": 5.233e-06,
-          "last": 5.253e-06
+          "date": "2026-10-06",
+          "open": 5.245e-06,
+          "high": 5.249e-06,
+          "low": 5.172e-06,
+          "last": 5.214e-06
         },
         "daily": {
-          "last_closed_date": "2026-10-04",
-          "last_close": 5.256e-06,
+          "last_closed_date": "2026-10-05",
+          "last_close": 5.246e-06,
           "closed_candles": 720,
-          "rsi14": 61.6,
-          "atr14": 2.71564e-07,
-          "atr14_pct": 5.17,
-          "ema20": 4.9929499e-06,
-          "ema50": 4.7188942e-06,
-          "ema200": 4.9063381e-06,
+          "rsi14": 61.18,
+          "atr14": 2.62738e-07,
+          "atr14_pct": 5.01,
+          "ema20": 5.01705e-06,
+          "ema50": 4.739565e-06,
+          "ema200": 4.9099013e-06,
           "bollinger_20_2": {
-            "middle": 4.9744e-06,
-            "upper": 5.5716656e-06,
-            "lower": 4.3771344e-06,
-            "width_pct": 24.01,
-            "percent_b": 0.736
+            "middle": 5.02195e-06,
+            "upper": 5.5416793e-06,
+            "lower": 4.5022207e-06,
+            "width_pct": 20.7,
+            "percent_b": 0.716
           },
           "macd_12_26_9": {
-            "macd": 1.61324e-07,
-            "signal": 1.66285e-07,
-            "histogram": -4.96124e-09
+            "macd": 1.62033e-07,
+            "signal": 1.65435e-07,
+            "histogram": -3.40201e-09
           }
         }
       }
