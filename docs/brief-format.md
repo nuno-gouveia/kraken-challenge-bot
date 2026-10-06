@@ -11,6 +11,10 @@ Agreed with Nuno on 5 Oct 2026: **the old brief's layout, made shorter.** The ac
 - Don't repeat a number or a reason. Each one appears once, in its section.
 - Don't explain how you got a number unless sources disagree. Then say it in one line: "Kraken and CoinGecko differ by EUR 80; used Kraken."
 
+## The email
+
+The brief file is written as plain text in the template below; `src/brief_email.py` turns it into the email, styled like the old briefs. So the file must follow the template exactly: the `# subject` line first, the ACTION and Verdict lines, each section heading in capitals on its own line, steps numbered, alerts as `- below EUR <n> / $<n>: <text>`. **Bold** (`**...**`) and links (`[label](url)`) carry into the email.
+
 ## Subject
 
 `BTC brief <D Mon> - <ACTION>: <reason in at most 8 words>`

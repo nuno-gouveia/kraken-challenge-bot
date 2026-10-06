@@ -83,4 +83,12 @@ Telegram reports can arrive while you write. Right before the email, start `hear
 
 ## 8. Email
 
-With the Gmail connector, to Nuno's own address (the connected account; find it from the From header of the newest message in Sent; never write it into the repo). Subject as in `docs/brief-format.md`: `BTC brief <D Mon> - <ACTION>: <reason>` (with the shadow prefix in shadow mode). Body: the brief, HTML if the tool takes it, otherwise plain text that reads well on a phone. No em dash. Ends with "Not financial advice."
+Render the brief into the email. Don't write the HTML by hand: the script gives every brief the old briefs' look (blue action box with the account, bold day labels over numbered steps, a bordered alerts table, grey small print).
+
+```
+python -m src.brief_email analyses/YYYY-MM-DD-brief.md --html /tmp/brief.html --text /tmp/brief.txt
+```
+
+It prints the subject and refuses a brief with an em dash or without an ACTION line; fix the file and run it again. It relies on the brief following `docs/brief-format.md` exactly: section headings in capitals on their own line, numbered steps, alert lines as `- below EUR <n> / $<n>: <text>` or `- at <when>: <text>`.
+
+Send with the Gmail connector to Nuno's own address (the connected account; find it from the From header of the newest message in Sent; never write it into the repo). Subject: the printed subject, with the shadow prefix in shadow mode. **`htmlBody`: the contents of `/tmp/brief.html`. `body`: the contents of `/tmp/brief.txt`.** Pass both, unchanged.
