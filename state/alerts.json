@@ -87,7 +87,7 @@
       "level_usd_ref": 84059,
       "kind": "action",
       "message": "SELL the rest of your BTC at market now. Price is back at your entry (breakeven exit after T1).",
-      "status": "armed",
+      "status": "fired",
       "armed_at": "2026-10-07T05:30:00Z",
       "valid_from": null,
       "valid_until": null,
@@ -101,7 +101,9 @@
       "held_overnight": {
         "first_touch_at": "2026-10-07T02:01:00Z",
         "rechecked_at": "2026-10-07T05:30:00Z"
-      }
+      },
+      "fired_at": "2026-10-07T10:10:45Z",
+      "fired_source": "kraken"
     },
     {
       "id": "btc-t2",
