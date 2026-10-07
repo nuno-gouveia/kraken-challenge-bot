@@ -87,7 +87,7 @@
       "level_usd_ref": 84059,
       "kind": "action",
       "message": "SELL the rest of your BTC at market now. Price is back at your entry (breakeven exit after T1).",
-      "status": "armed",
+      "status": "held",
       "armed_at": "2026-10-05T07:10:43Z",
       "valid_from": null,
       "valid_until": null,
@@ -97,7 +97,9 @@
         "disarm": [
           "btc-t2"
         ]
-      }
+      },
+      "held_at": "2026-10-07T02:01:33Z",
+      "held_first_touch_at": "2026-10-07T02:01:00Z"
     },
     {
       "id": "btc-t2",
@@ -164,12 +166,14 @@
       "level_usd_ref": 84378,
       "kind": "watch",
       "message": "TEST alert, nothing to do. BTC moved 0.1% down from when the test was set; this checks the heartbeat reaches you.",
-      "status": "armed",
+      "status": "fired",
       "armed_at": "2026-10-02T22:09:33Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
-      "on_done": null
+      "on_done": null,
+      "fired_at": "2026-10-07T02:01:33Z",
+      "fired_source": "kraken"
     },
     {
       "id": "btc-cpi-eve",
