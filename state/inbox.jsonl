@@ -3,3 +3,21 @@
 {"ts": "2026-10-02T22:34:30Z", "text": "/dryrun Bought 100 at 84000", "parsed": {"dry": true, "cmd": "bought", "asset": "BTC", "usd": 100.0, "price": 84000.0, "price_ccy": "USD"}, "update_id": 70508657}
 {"ts": "2026-10-03T06:54:21Z", "text": "/status", "parsed": {"dry": false, "cmd": "status"}, "update_id": 70508658}
 {"ts": "2026-10-05T07:06:45Z", "text": "/sold half at 86170$", "parsed": {"dry": false, "cmd": "sold", "asset": "BTC", "amount": "half", "price": 86170.0, "price_ccy": "USD"}, "update_id": 70508661}
+{"ts": "2026-10-07T10:13:06Z", "text": "/sold 209.31$ of btc at 83786$", "parsed": {"dry": false, "cmd": "sold", "asset": "BTC", "amount": 209.31, "price": 83786.0, "price_ccy": "USD"}, "update_id": 70508664}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508666}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508667}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508668}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508669}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508670}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508671}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508672}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508673}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508674}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508675}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508676}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508677}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508678}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508679}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508680}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508681}
+{"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508682}

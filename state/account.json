@@ -6,42 +6,10 @@
     "long_only": true,
     "stop_loss_orders": false
   },
-  "balance_usd": 1055.26,
+  "balance_usd": 1054.56,
   "balance_basis": "cost basis; equity varies with the open position",
-  "cash_usd": 845.26,
-  "positions": [
-    {
-      "id": "trade-2",
-      "asset": "BTC",
-      "side": "long",
-      "size_usd": 210.0,
-      "entry_usd": 84065.0,
-      "entry_eur_approx": 74612,
-      "qty_btc": 0.00249805,
-      "opened_at": "2026-10-02T18:44:00Z",
-      "plan": {
-        "exit_eur": 72800,
-        "warning_eur": 73300,
-        "t1_eur": 77050,
-        "t1_action": "sell half, then move the exit to breakeven",
-        "breakeven_exit_eur": 74600,
-        "t2_eur": 78200,
-        "risk_usd": 10.16,
-        "risk_usd_with_slippage": 11.42,
-        "reward_risk": "1.67:1",
-        "must_close_or_be_past_t1_before": "2026-10-14 (US CPI, tier one)"
-      },
-      "sells": [
-        {
-          "at": "2026-10-05T07:10:43Z",
-          "qty": 0.00249805,
-          "price_usd": 86170.0,
-          "cost_usd": 210.0,
-          "realised_usd": 5.26
-        }
-      ]
-    }
-  ],
+  "cash_usd": 1054.56,
+  "positions": [],
   "closed_trades": [
     {
       "id": "trade-1",
@@ -50,9 +18,17 @@
       "opened_at": "2026-09-18",
       "closed_at": "2026-09-21",
       "result_usd": 20.89
+    },
+    {
+      "id": "trade-2",
+      "asset": "BTC",
+      "size_usd": 420.0,
+      "opened_at": "2026-10-02T18:44:00Z",
+      "closed_at": "2026-10-07T10:15:50Z",
+      "result_usd": 4.56
     }
   ],
-  "last_confirmed_at": "2026-10-05T07:10:43Z",
+  "last_confirmed_at": "2026-10-07T10:15:50Z",
   "last_confirmed_via": "telegram",
-  "last_confirmed_text": "/sold half at 86170$"
+  "last_confirmed_text": "/sold 209.31$ of btc at 83786$"
 }

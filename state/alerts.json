@@ -87,7 +87,7 @@
       "level_usd_ref": 84059,
       "kind": "action",
       "message": "SELL the rest of your BTC at market now. Price is back at your entry (breakeven exit after T1).",
-      "status": "fired",
+      "status": "done",
       "armed_at": "2026-10-07T05:30:00Z",
       "valid_from": null,
       "valid_until": null,
@@ -103,7 +103,9 @@
         "rechecked_at": "2026-10-07T05:30:00Z"
       },
       "fired_at": "2026-10-07T10:10:45Z",
-      "fired_source": "kraken"
+      "fired_source": "kraken",
+      "done_at": "2026-10-07T10:15:50Z",
+      "done_via": "telegram report"
     },
     {
       "id": "btc-t2",
@@ -113,7 +115,7 @@
       "level_usd_ref": 88116,
       "kind": "action",
       "message": "SELL ALL the BTC you still hold at market now (T2). Trade complete.",
-      "status": "armed",
+      "status": "disabled",
       "armed_at": "2026-10-02T18:47:00Z",
       "valid_from": null,
       "valid_until": null,
@@ -128,7 +130,8 @@
           "btc-cpi-exit"
         ]
       },
-      "trade": "sell_all"
+      "trade": "sell_all",
+      "disabled_reason": "on_done of btc-breakeven"
     },
     {
       "id": "btc-watch-low",
