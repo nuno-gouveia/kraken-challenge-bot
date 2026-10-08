@@ -141,12 +141,14 @@
       "level_usd_ref": 81299,
       "kind": "watch",
       "message": "Watch level: BTC lost EUR 72,150, under the strong $81,380 support. Nothing to do; the exit above should already have fired.",
-      "status": "armed",
+      "status": "fired",
       "armed_at": "2026-10-02T18:47:00Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
-      "on_done": null
+      "on_done": null,
+      "fired_at": "2026-10-08T17:01:12Z",
+      "fired_source": "kraken"
     },
     {
       "id": "btc-watch-high",
