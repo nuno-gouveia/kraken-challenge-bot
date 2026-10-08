@@ -1,15 +1,15 @@
 {
-  "updated_at": "2026-10-06T07:20:00Z",
+  "updated_at": "2026-10-08T07:15:00Z",
   "updated_by": "claude (daily brief)",
-  "eur_usd": 1.12072,
-  "note": "Shadow proposal from the daily brief. Same levels as the current set; the 2 Oct test alert is removed.",
+  "eur_usd": 1.11837,
+  "note": "Shadow proposal from the daily brief. Position closed on 7 Oct, so only the watch levels remain; no entry is proposed.",
   "alerts": [
     {
       "id": "btc-exit",
       "pair": "XBTEUR",
       "direction": "below",
       "level": 72800,
-      "level_usd_ref": 82031,
+      "level_usd_ref": 81417,
       "kind": "action",
       "message": "SELL ALL your BTC at market now. This is the exit of the plan.",
       "status": "disabled",
@@ -35,7 +35,7 @@
       "pair": "XBTEUR",
       "direction": "below",
       "level": 73300,
-      "level_usd_ref": 82594,
+      "level_usd_ref": 81977,
       "kind": "watch",
       "message": "Warning: BTC is approaching your exit (EUR 72,800). Do nothing yet.",
       "status": "disabled",
@@ -51,7 +51,7 @@
       "pair": "XBTEUR",
       "direction": "above",
       "level": 77050,
-      "level_usd_ref": 86820,
+      "level_usd_ref": 86170,
       "kind": "action",
       "message": "SELL HALF your BTC at market now (T1). The exit then moves up to breakeven.",
       "status": "done",
@@ -84,11 +84,11 @@
       "pair": "XBTEUR",
       "direction": "below",
       "level": 74600,
-      "level_usd_ref": 84059,
+      "level_usd_ref": 83430,
       "kind": "action",
       "message": "SELL the rest of your BTC at market now. Price is back at your entry (breakeven exit after T1).",
-      "status": "armed",
-      "armed_at": "2026-10-05T07:10:43Z",
+      "status": "done",
+      "armed_at": "2026-10-07T05:30:00Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
@@ -97,17 +97,25 @@
         "disarm": [
           "btc-t2"
         ]
-      }
+      },
+      "held_overnight": {
+        "first_touch_at": "2026-10-07T02:01:00Z",
+        "rechecked_at": "2026-10-07T05:30:00Z"
+      },
+      "fired_at": "2026-10-07T10:10:45Z",
+      "fired_source": "kraken",
+      "done_at": "2026-10-07T10:15:50Z",
+      "done_via": "telegram report"
     },
     {
       "id": "btc-t2",
       "pair": "XBTEUR",
       "direction": "above",
       "level": 78200,
-      "level_usd_ref": 88116,
+      "level_usd_ref": 87457,
       "kind": "action",
       "message": "SELL ALL the BTC you still hold at market now (T2). Trade complete.",
-      "status": "armed",
+      "status": "disabled",
       "armed_at": "2026-10-02T18:47:00Z",
       "valid_from": null,
       "valid_until": null,
@@ -122,14 +130,15 @@
           "btc-cpi-exit"
         ]
       },
-      "trade": "sell_all"
+      "trade": "sell_all",
+      "disabled_reason": "on_done of btc-breakeven"
     },
     {
       "id": "btc-watch-low",
       "pair": "XBTEUR",
       "direction": "below",
       "level": 72150,
-      "level_usd_ref": 81299,
+      "level_usd_ref": 80690,
       "kind": "watch",
       "message": "Watch level: BTC lost EUR 72,150, under the strong $81,380 support. Nothing to do; the exit above should already have fired.",
       "status": "armed",
@@ -144,7 +153,7 @@
       "pair": "XBTEUR",
       "direction": "above",
       "level": 77250,
-      "level_usd_ref": 87045,
+      "level_usd_ref": 86394,
       "kind": "watch",
       "message": "Watch level: BTC is above EUR 77,250 (R2 $87,000). Nothing to do.",
       "status": "fired",
