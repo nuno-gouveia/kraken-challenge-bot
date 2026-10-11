@@ -15,7 +15,7 @@ Nothing here is automatic. Each step is Nuno's call. Until the last box is ticke
 - [x] Set `config/brief.json` `mode` to `live` (11 Oct 2026, Nuno's request) (any Claude session can do it on request; commit `brief: go live`). From the next brief, `state/alerts.json` is Claude's daily plan and Telegram follows it.
 - [ ] The first live brief's alerts arrive on Telegram ("Today's alerts are set"). Check them against the email once.
 - [ ] Delete the manual price alerts in the Kraken app.
-- [ ] Disable the old claude.ai scheduled tasks: daily brief, event checks, weekly review.
+- [x] Disable the old claude.ai scheduled tasks: daily brief and weekly review paused (11 Oct 2026); the event-check routines now follow `docs/event-check.md`.
 - [x] Update the build-status table in `CLAUDE.md`.
 
 ## Rolling back

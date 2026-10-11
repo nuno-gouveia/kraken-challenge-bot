@@ -26,7 +26,8 @@ Read `config/brief.json`. **`mode` decides where the alerts go:**
 2. `state/alerts.json`: what is armed, what fired, was done, skipped, held overnight (`held_overnight`), and any alert with `awaiting_fill: true` (Nuno tapped Done but never sent the price: ask for it in step 1 of the brief).
 3. The last 50 lines of `state/inbox.jsonl`: every Telegram message since the last brief. A fill he reported is real even if nothing else mentions it. Questions or corrections he left ("saved for the next brief") get an answer in the brief. An account correction he **states** may be applied to `state/account.json` (commit it as `brief: account correction`); never infer a fill.
 4. `state/heartbeat.json`: a price outage or an alerts-file problem is news for the brief.
-5. `data/snapshot.json`: prices and daily indicators from Kraken. If `fetched_at` is more than 3 hours old, say so in the brief and do not invent prices. A web price may be quoted only labelled as "not Kraken".
+5. Last evening's event check, if there was one (`analyses/YYYY-MM-DD-event-*.md`, `docs/event-check.md`): what it decided and any alert it changed.
+6. `data/snapshot.json`: prices and daily indicators from Kraken. If `fetched_at` is more than 3 hours old, say so in the brief and do not invent prices. A web price may be quoted only labelled as "not Kraken".
 
 ## 2. What happened since the last brief
 
