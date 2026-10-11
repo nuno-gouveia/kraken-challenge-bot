@@ -1,0 +1,40 @@
+name: notify-brief
+
+# When a brief or an event check is pushed (analyses/*.md), send Nuno its
+# TLDR on Telegram. The email keeps the full version.
+on:
+  push:
+    branches: [main]
+    paths: ["analyses/*.md"]
+
+concurrency:
+  group: notify-brief
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -q -r requirements.txt
+
+      # Never echo these.
+      - name: Send TLDR
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          BEFORE: ${{ github.event.before }}
+          AFTER: ${{ github.sha }}
+        run: python -m src.tldr --before "$BEFORE" --after "$AFTER"

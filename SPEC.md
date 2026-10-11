@@ -130,6 +130,7 @@ Written by `snapshot.py`. For each of BTC, ETH, LINK, BCH, DOGE, SHIB, in USD an
 | `heartbeat.yml` | `cron: "*/5 * * * *"` + `workflow_dispatch` | `concurrency: heartbeat` (cancel-in-progress: false). Commit only when state changed. GitHub's scheduler can run late under load, which is why the check uses candles since `armed_at`, not "price now" |
 | `snapshot.yml` | `cron: "20 6 * * *"` + `workflow_dispatch` | Before the 07:00 UTC brief, with room for GitHub's late starts |
 | `notify-alerts.yml` | `push` touching `state/alerts.json` by Claude | Sends "today's alerts" summary to Telegram |
+| `notify-brief.yml` | `push` touching `analyses/*.md` | Sends the brief's or event check's TLDR to Telegram |
 
 Public repo: Actions minutes are free. Scheduled workflows get disabled after 60 days without repo activity; the daily brief commit keeps it alive.
 
