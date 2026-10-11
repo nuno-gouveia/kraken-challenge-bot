@@ -12,15 +12,15 @@ This repo replaces a setup where Claude wrote daily emails and Nuno typed price 
 
 ## Build status
 
-Milestones 1 to 4 are built; milestone 5 is Nuno's checklist in `docs/cutover.md`. Update this section as milestones land.
+All five milestones are done: the new system went live on 11 Oct 2026 (see `docs/cutover.md`). Update this section as milestones land.
 
 | Milestone | Status |
 |---|---|
 | 1. Heartbeat: Kraken price + alert check + Telegram send | live on `main`; acceptance: the 0.1% test alert reaching Nuno once |
 | 2. Telegram inbound: `/bought`, `/sold`, `/status`, `/alerts` | built (`src/inbound.py`); acceptance: `/dryrun Bought 100 at <price>` |
 | 3. Market snapshot job (indicators from Kraken OHLC) | built (`src/snapshot.py`, `snapshot.yml`); acceptance: one day checked against a chart |
-| 4. Daily brief as a scheduled Claude Code task | built (`docs/daily-brief.md`, `notify-alerts.yml`), running in **shadow** mode (`config/brief.json`) |
-| 5. Cut-over: retire the old claude.ai scheduled tasks | Nuno's checklist: `docs/cutover.md` |
+| 4. Daily brief as a scheduled Claude Code task | **live** since 11 Oct 2026 (`config/brief.json`): the brief writes `state/alerts.json` |
+| 5. Cut-over: retire the old claude.ai scheduled tasks | done 11 Oct 2026: old daily brief disabled (`docs/cutover.md`) |
 
 ## Where things live
 
