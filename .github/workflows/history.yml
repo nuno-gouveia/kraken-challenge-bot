@@ -1,0 +1,38 @@
+name: history
+
+# Price history for backtests (src/history.py): about three years of 1h and
+# 15m candles for BTC/EUR and BTC/USDT from Binance's public archive, plus
+# Kraken's last 720 hourly candles for comparison. Past months never change,
+# so a monthly run only adds the month just ended.
+on:
+  schedule:
+    - cron: "17 5 2 * *"
+  workflow_dispatch:
+
+concurrency:
+  group: history
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  history:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -q -r requirements.txt
+
+      - run: python -m src.history
+
+      - name: Commit history
+        run: |
+          echo "history: price data $(date -u +%Y-%m-%d)" > "$RUNNER_TEMP/commit-msg"
+          scripts/commit-state.sh "$RUNNER_TEMP/commit-msg" data/history/
