@@ -1,5 +1,6 @@
 {
   "price_failures": 0,
   "outage_notified": false,
-  "alerts_problems": []
+  "alerts_problems": [],
+  "gap_reported_to": "2026-10-19T15:51:12Z"
 }
