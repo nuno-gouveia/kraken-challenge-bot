@@ -11,7 +11,7 @@ challenge sizing (docs/strategy.md), so they can be compared:
   stabilisation, buy; stop 1.2 ATR, T1 sells half and moves the exit to
   breakeven, T2. Plus a simplified Plan B breakout.
 
-Costs per round trip: fee on both sides plus slippage on the exit. When a
+Costs per round trip: fee on both sides (zero on Kraken Funded) plus slippage on the exit. When a
 candle touches both the stop and the target, the stop is assumed first.
 """
 
@@ -28,7 +28,7 @@ from statistics import mean
 from zoneinfo import ZoneInfo
 
 LISBON = ZoneInfo("Europe/Lisbon")
-FEE = 0.004       # Kraken taker, lowest volume tier, each side
+FEE = 0.0         # Kraken Funded: no trading commissions in the challenge or funded state (Nuno, 19 Oct 2026)
 EXIT_SLIP = 0.003  # docs/strategy.md: assume 0.3% on an exit
 START, TARGET, FLOOR = 1050.0, 1120.0, 950.0
 RISK, CAP = 0.02, 0.40  # 2% of balance at risk; 40% of balance max per position
@@ -339,13 +339,13 @@ def sensitivity(m15: list[Bar], out: list[str]) -> None:
     """The leading rules under other costs and slower reactions: the edge is thin."""
     global FEE, EXIT_SLIP
     saved = FEE, EXIT_SLIP
-    rules = [Flash(1, 0.05, 0.015, 0.04), Flash(3, 0.05, 0.015, 0.04), Flash(1, 0.06, 0.03, 0.02)]
-    out.extend(["## How fast you buy, and what it costs, decide the result", "",
+    rules = [Flash(4, 0.05, 0.02, 0.04), Flash(4, 0.05, 0.015, 0.03), Flash(1, 0.05, 0.015, 0.04)]
+    out.extend(["## How fast you buy, and slippage, decide the result", "",
                 "Balance after three years for the leading rules, by round-trip cost and by how long after the "
                 "signal the buy happens.", "",
                 "| Rule | Cost | Buy after 15 min | 30 min | 60 min |", "|---|---|---|---|---|"])
     for rule in rules:
-        for fee, slip in ((0.004, 0.003), (0.0026, 0.001), (0.001, 0.0)):
+        for fee, slip in ((0.0, 0.003), (0.0, 0.005), (0.004, 0.003)):
             FEE, EXIT_SLIP = fee, slip
             cells = []
             for delay in (1, 2, 4):
