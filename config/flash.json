@@ -1,0 +1,13 @@
+{
+  "enabled": true,
+  "pair": "XBTEUR",
+  "window_h": 4,
+  "drop": 0.05,
+  "target": 0.02,
+  "stop": 0.04,
+  "hold_h": 24,
+  "act_within_min": 15,
+  "risk": 0.02,
+  "cap": 0.40,
+  "about": "Flash dip (docs/strategy.md, src/flash.py): BTC falls `drop` under its high of the last `window_h` hours, outside quiet hours, with no position open: BUY, sized for `risk` of the balance on the `stop` distance and capped at `cap` of it. Exits from the real fill: +target, -stop, or after hold_h hours. Tested in analyses/backtests/2026-10-19-flash-dip-vs-dip-setup.md. Set enabled to false to pause it. Change numbers only with Nuno's agreement."
+}

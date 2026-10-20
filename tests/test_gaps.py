@@ -71,7 +71,8 @@ def test_gap_notice_is_silent_in_quiet_hours(state):
 def run_with_gap(state, minutes, now=NOW, session=None):
     notifier = FakeNotifier()
     summary = heartbeat.run(state, notifier, session or FakeKraken(), None, now_fn=lambda: now,
-                            sleep=lambda _: None, last_ok=now - minutes * 60)
+                            sleep=lambda _: None, last_ok=now - minutes * 60,
+                            flash_cfg={"enabled": False})
     for text, _ in notifier.sent:
         assert "\u2014" not in text
         assert_telegram_html(text)
@@ -118,7 +119,7 @@ def test_a_gap_is_reported_once_even_if_github_keeps_returning_the_same_old_run(
     for i in range(3):
         notifier = FakeNotifier()
         heartbeat.run(state, notifier, FakeKraken(), None, now_fn=lambda: NOW + i * 300,
-                      sleep=lambda _: None, last_ok=old_success)
+                      sleep=lambda _: None, last_ok=old_success, flash_cfg={"enabled": False})
         assert len(gap_texts(notifier)) == (1 if i == 0 else 0)
 
 
@@ -128,5 +129,5 @@ def test_a_new_gap_after_one_was_reported_is_reported(state):
     notifier = FakeNotifier()
     later = NOW + 3 * 3600
     heartbeat.run(state, notifier, FakeKraken(), None, now_fn=lambda: later, sleep=lambda _: None,
-                  last_ok=later - 40 * 60)
+                  last_ok=later - 40 * 60, flash_cfg={"enabled": False})
     assert len(gap_texts(notifier)) == 1
