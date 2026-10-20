@@ -22,7 +22,7 @@ from pathlib import Path
 
 import requests
 
-from src import alerts, gaps, inbound, messages, prices as price_source, quiet_hours, telegram
+from src import alerts, flash, gaps, inbound, messages, prices as price_source, quiet_hours, telegram
 
 FAILURES_BEFORE_OUTAGE = 3
 HEARTBEAT_DEFAULTS = {"price_failures": 0, "outage_notified": False, "alerts_problems": []}
@@ -130,7 +130,8 @@ def overnight_entries(overnight, hits, p, now):
 
 
 def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key: str | None,
-        now_fn=time.time, sleep=time.sleep, write: bool = True, last_ok: float | None = None) -> list[str]:
+        now_fn=time.time, sleep=time.sleep, write: bool = True, last_ok: float | None = None,
+        flash_cfg: dict | None = None) -> list[str]:
     """One heartbeat. Returns a summary of what changed, for the commit message.
 
     last_ok: when the previous successful run finished (from GitHub). After a
@@ -184,8 +185,13 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
     held = [a for a in doc["alerts"] if isinstance(a, dict) and a.get("status") == "held"] if doc else []
     p = None
     hits: list = []
-    if live or (held and not quiet) or due:
+    # Flash dip (src/flash.py): watched outside quiet hours only, as agreed.
+    fcfg = flash_cfg if flash_cfg is not None else flash.config()
+    watch_flash = doc is not None and fcfg["enabled"] and not quiet
+    if live or (held and not quiet) or due or watch_flash:
         since: dict[str, int] = {}
+        if watch_flash:
+            since[fcfg["pair"]] = int(now) - flash.lookback_s(fcfg) - 60
         for a in live + held:
             t = int(alerts.parse_ts(a["armed_at"]))
             since[a["pair"]] = min(since.get(a["pair"], t), t)
@@ -239,6 +245,23 @@ def run(state_dir: Path, notifier: Notifier, session: requests.Session, cmc_key:
                     if notifier.send(messages.gate_message(hit, p, now), silent=True):
                         a["gate_notified_at"] = alerts.iso(now)
                         summary.append(f"{a['id']} touched outside its window")
+
+    if watch_flash and p is not None and p.source == "kraken":
+        # CoinMarketCap gives one price, not the last hours, so a fallback run can't see a flash dip.
+        for aid in flash.expire_stale(doc, now):
+            summary.append(f"{aid} lapsed")
+        pair = fcfg["pair"]
+        hit = flash.detect(p.candles.get(pair, []), p.last[pair], now, fcfg)
+        why_not = flash.blocked(doc, account, hb, now, fcfg) if hit else None
+        if hit and why_not:
+            print(f"flash: dip seen, no signal ({why_not})")
+        elif hit:
+            size = flash.size_usd(account, fcfg)
+            buy = flash.buy_alert(now, hit[0], hit[1], p.last[pair], size, fcfg, p.eur_usd)
+            if size > 0 and notifier.send(flash.buy_message(buy, now), reply_markup=messages.buttons(buy["id"])):
+                doc["alerts"].append(buy)
+                hb["flash_signal_at"] = alerts.iso(now)
+                summary.append(f"flash dip: {buy['id']}")
 
     for a in due:
         keyboard = messages.buttons(a["id"]) if a["kind"] == "action" else None

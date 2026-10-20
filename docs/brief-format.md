@@ -60,8 +60,8 @@ WHY
 - Breadth: <one line>
 
 SETUPS
-- Dip setup: <n> of 4 (missing: <steps>).
-- Plan B: <pullback: issued or not, why in a few words>; <breakout: same>.
+- Flash dip: <armed / paused>, buy below EUR <4h high x 0.95> / $<n> right now; <signals and trades since the last brief, or "no signal">.
+- Results so far: <n trades, n won, net $> (backtest: about 8 in 10 win).
 - Waiting for your answer: <open question in one line, only if one is open>
 
 REFERENCE LEVELS (information only, not alerts)
@@ -115,9 +115,8 @@ WHY
 - Breadth: improved, four of six coins up on the week.
 
 SETUPS
-- Dip setup: 0 of 4 (no drop, not oversold).
-- Plan B: pullback 0.95:1, under the 1:1 minimum; breakout leaves no room for a legal stop. Neither issued.
-- Waiting for your answer: keep the RSI-below-60 bar, or switch to RSI below 45 plus a 1.5 ATR two-day fall?
+- Flash dip: armed; a signal needs BTC under about EUR 73,600 / $82,250 within 4 hours of today's high. No signal yet.
+- Results so far: no flash-dip trades yet (backtest: about 8 in 10 win).
 
 REFERENCE LEVELS (information only, not alerts)
 R2 EUR 77,881 / $87,000 · R1 EUR 76,520 / $85,480 · S1 EUR 75,336 / $84,158 · Entry EUR 74,613 / $84,065

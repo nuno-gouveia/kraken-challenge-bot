@@ -39,7 +39,7 @@ On the web: price action overnight, news, the macro calendar (what prints today 
 
 ## 4. Decide
 
-Apply `docs/strategy.md` exactly: the verdict (up / down / don't know), the dip-setup score (which of the four steps), Plan B with both versions priced, sizing (2% risk, caps, survival check on combined exposure), hard rules for levels, tier-one dates. **Quiet hours**: an action due between 22:30 and 06:30 Lisbon is not sent until the 06:30 re-check. Say so when a level could plausibly be hit overnight.
+Apply `docs/strategy.md` exactly: the verdict (up / down / don't know), an open position first (its exits, any deadline), the flash dip (armed or paused, the price that would trigger it today, signals and trades since the last brief, results so far), sizing (2% risk, caps), hard rules for levels, tier-one dates. **The brief does not issue entries:** buys come only from the flash dip, which the heartbeat sends live. Read `config/flash.json`; a flash buy waiting for an answer, or its exits, are in `state/alerts.json` (ids starting `flash-`). Don't change `config/flash.json` without Nuno's agreement. **Quiet hours**: an action due between 22:30 and 06:30 Lisbon is not sent until the 06:30 re-check. Say so when a level could plausibly be hit overnight.
 
 Never change `docs/strategy.md`. Propose changes in the brief.
 

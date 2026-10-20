@@ -33,6 +33,7 @@ All five milestones are done: the new system went live on 11 Oct 2026 (see `docs
 | `state/telegram_offset.json` | The next Telegram update id to read | Heartbeat |
 | `state/alerts.proposed.json` | The daily brief's alerts while `config/brief.json` is in `shadow` mode; nothing watches it | Claude (daily brief) |
 | `config/brief.json` | `mode`: `shadow` (brief proposes, heartbeat keeps the current alerts) or `live` | Nuno (via any Claude session) |
+| `config/flash.json` | The flash dip settings (on/off, 5% drop in 4 hours, +2% / -4% / 24h, sizing); `src/flash.py` | Nuno (via any Claude session) |
 | `data/snapshot.json` | Latest market snapshot and indicators, computed from Kraken OHLC | Snapshot job |
 | `analyses/YYYY-MM-DD-brief.md` | The daily brief, as sent | Claude |
 | `data/history/` | ~3 years of 1h and 15m BTC/EUR and BTC/USDT candles (Binance archive) for backtests, plus Kraken's last 720 hourly candles to compare | History job (`history.yml`, `src/history.py`), monthly |
@@ -72,6 +73,7 @@ All five milestones are done: the new system went live on 11 Oct 2026 (see `docs
 - Telegram replies wait for the next heartbeat (5 minutes, often more when GitHub runs late).
 - Before committing alerts: `python -m src.validate_alerts state/alerts.json`.
 - The daily brief: `docs/daily-brief.md`. Snapshot by hand: Actions > snapshot > Run workflow.
+- The flash dip (`src/flash.py`, `docs/strategy.md`): outside quiet hours, with no position open, each run checks Kraken's 1-minute candles. When BTC is 5% under its 4-hour high, the bot sends one BUY message with buttons and records it as a fired alert `flash-YYYYMMDD-HHMM`. Done or `/bought` arms three exits (`-target`, `-stop`, `-time`); `/bought` moves the price exits to his real fill. The first exit hit disarms the others. An unanswered buy lapses after 2 hours. The daily brief no longer issues entries.
 - Quiet hours 22:30 to 06:30 Lisbon (`src/quiet_hours.py`): action alerts hit then become `status: "held"`, nothing is sent, and the first run from 06:30 re-arms them from 06:30 and sends one "Morning update". A brief that sees `held_overnight` on an alert should say what happened overnight.
 
 ## History

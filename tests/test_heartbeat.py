@@ -8,11 +8,17 @@ from tests.conftest import NOW, T, FakeKraken, FakeNotifier, FakeResponse, read,
 EM_DASH = "\u2014"
 
 
-def run(state, session=None, notifier=None, now=NOW, cmc_key=None, write_state=True):
+FLASH_OFF = {"enabled": False}
+
+
+def run(state, session=None, notifier=None, now=NOW, cmc_key=None, write_state=True, flash_cfg=None):
+    """One heartbeat. The flash dip is off unless a test passes flash_cfg (tests/test_flash.py)."""
+    from src import flash
     notifier = notifier or FakeNotifier()
     summary = heartbeat.run(
         state, notifier, session or FakeKraken(), cmc_key,
         now_fn=lambda: now, sleep=lambda _: None, write=write_state,
+        flash_cfg={**flash.DEFAULTS, **(flash_cfg or FLASH_OFF)},
     )
     for text, _ in notifier.sent:
         assert EM_DASH not in text

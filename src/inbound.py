@@ -13,7 +13,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from src import account as acct
-from src import alerts, commands, kraken
+from src import alerts, commands, flash, kraken
 from src.messages import NFA, escape, lisbon, listing_order, num, signed_usd, trigger
 
 PASS_USD, FAIL_USD = 1120.0, 950.0
@@ -190,6 +190,7 @@ class Inbound:
             return doc, account
 
         armed, disarmed, matched = [], [], None
+        flash_buy = flash.latest_buy(doc) if doc is not None and fill.side == "buy" else None
         if doc is not None:
             if fill.side == "buy":
                 trades = ("buy",)
@@ -204,6 +205,12 @@ class Inbound:
             matched = alerts.fired_for(doc, asset, trades)
             if matched is not None:
                 armed, disarmed = alerts.mark_done(doc, matched, now_iso, "telegram report")
+            if flash_buy is not None:
+                rate = flash_buy["flash"].get("eur_usd") or self.prices.eur_usd
+                entry_eur = price_eur if price_eur else price_usd / rate
+                if flash_buy.get("status") == "fired":
+                    alerts.mark_done(doc, flash_buy, now_iso, "telegram report")
+                armed += flash.arm_exits(doc, flash_buy, entry_eur, self.now, rate)
             for a in doc["alerts"]:
                 if isinstance(a, dict) and a.get("awaiting_fill") and alerts.pair_asset(a.get("pair", "")) == asset:
                     a["awaiting_fill"] = False
@@ -215,6 +222,10 @@ class Inbound:
         lines += self.account_lines(fill.account)
         if matched is not None:
             lines.append(f"Matched alert {escape(matched['id'])}: marked done.")
+        if flash_buy is not None:
+            lines.append("<b>Flash-dip exits set from your price.</b> The first one hit tells you to sell:")
+            armed = [a for a in armed if not a.startswith(flash_buy["id"])]
+            lines += [f"- {self.alert_brief(alerts.by_id(doc, a))}" for a in flash.exit_ids(flash_buy)]
         if armed:
             lines.append("Now watching: " + ", ".join(self.alert_brief(alerts.by_id(doc, a)) for a in armed) + ".")
         if disarmed:
@@ -285,6 +296,13 @@ class Inbound:
             }.get(trade)
             alert["awaiting_fill"] = ask is not None
             lines = [f"<b>Noted: {escape(aid)} done.</b>"]
+            if flash.is_flash(alert):
+                f = alert["flash"]
+                armed += flash.arm_exits(doc, alert, f["signal_eur"], self.now, f.get("eur_usd") or self.prices.eur_usd)
+                lines.append("Exits set from the signal price for now; your real price moves them:")
+                lines += [f"- {self.alert_brief(alerts.by_id(doc, a))}" for a in flash.exit_ids(alert)]
+                armed = []
+                ask = f"/bought {f['size_usd']:.0f} at <price>"
             if ask:
                 lines.append(f"Send the price you got so the account is right: {escape(ask)}")
             if armed:

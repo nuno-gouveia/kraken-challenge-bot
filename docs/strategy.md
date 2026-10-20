@@ -20,24 +20,22 @@ Every brief gives one verdict: **up / down / don't know**. Recommend a position 
 
 Every recommended position states: asset, entry trigger, size in dollars, **exit (down)**, **T1** and **T2 (up)**, every price in EUR and USD.
 
-## Nuno's setup: buy the dip, capped
+## The setup: flash dip (Nuno, 19 to 20 Oct 2026)
 
-His own playbook, kept: **sharp drop, oversold, stabilisation, then buy for a bounce.** State in every brief which of the four steps are present and which are missing.
+Replaces the daily-candle dip setup and Plan B entries. Nuno's own observation over years: after a very sharp drop of a few hours, BTC usually bounces, and a buy right after it can be sold within about a day at a small profit. Tested on three years of 15-minute candles (`analyses/backtests/2026-10-19-flash-dip-vs-dip-setup.md`): the dip setup and Plan B lost money; this rule made money across nearby settings, on BTC/EUR and BTC/USDT.
 
-- Consolidation at the highs is not stabilisation. Step 3 only counts after steps 1 and 2.
-- Step 1 expires after a few days without follow-through; a fresh catalysed drop restores it.
-- A retracement of an intraday spike on a day that is net up is not a sharp drop.
+**The rule** (settings in `config/flash.json`):
 
-**Open question still waiting for Nuno (since 1 Oct):** in this market RSI has not closed below 60 for twenty days, so step 2 never prints. Options put to him: **"keep the bar"** (accept the dip setup is dormant and rely on Plan B), or **"replace it"** with *RSI14 below 45 AND a two-day fall of at least 1.5 ATR*. **Neither is adopted until he answers.** Restate the question at most once per brief, briefly.
+- **Signal:** BTC/EUR on Kraken falls **5% or more under its highest price of the last 4 hours**. The heartbeat checks every run and sends a BUY message with the plan at once.
+- **Buy** at market, **only if Nuno can do it within about 15 minutes.** Later, the bounce is usually under way: let it go (tap Not done). Missing signals is fine.
+- **Size:** 2% of the balance at risk on the 4% stop, capped at 40% of the balance (about $420 at $1,055).
+- **Exits**, armed by the bot from the real fill price: **sell at +2%**, **exit at -4%**, or **sell after 24 hours**, whichever comes first.
+- **Only in awake hours:** no signals between 22:30 and 06:30 Lisbon (Nuno, 19 Oct 2026). One position at a time; one signal per 4-hour window; an unanswered signal lapses after 2 hours.
+- Expect about 10 signals a year in awake hours, about 8 in 10 winning (+2%) and the rest exiting at -4% or after 24 hours.
 
-## Plan B (standing, refreshed every morning)
+**What the brief and event checks do now:** they don't pick entries. They watch the market, the macro calendar and any open position, report how the flash dip is doing (signals, trades, results against the backtest), and judge whether a sharp drop looks like a flush (forced selling, the rule's case) or a real break (a hack, a ban, more to come). Untested ideas, such as pausing the flash dip before tier-one releases or a second strategy, are proposed in the brief with a backtest and wait for Nuno's answer.
 
-So an upward move is not missed just because the dip setup never fires. Every morning, **price both versions**:
-
-- **Pullback**: entry just above a tested support, exit below the next support.
-- **Breakout**: entry above resistance, exit back under it.
-
-Issue whichever passes the reward:risk test (below); say why the other was rejected. "Refreshed" includes saying nothing changed and why. A pre-written plan means taking it is execution, not improvisation.
+The old dip setup (sharp drop, oversold, stabilisation, buy on daily candles) and Plan B (pullback and breakout entries) are retired: in the backtest every reading of the dip setup lost money, and the breakout was flat at best.
 
 ## Sizing
 
@@ -95,6 +93,6 @@ Balance touches **$975**: stop trading, reassess, drop to 1% risk for the next t
 3. **What to do, step by step**, numbered and grouped by day. Doing nothing is written as an instruction ("Hold, do not add").
 4. **The alerts the bot is watching**, what each one will tell him to do, and what was removed and why.
 5. **Why**: price, technicals, flows and sentiment, macro, breadth, one line each.
-6. Dip setup score and Plan B, one line each. **Reference levels (information only)** on one or two lines.
+6. The flash dip, one or two lines. **Reference levels (information only)** on one or two lines.
 7. At most 450 words on a busy day, about 250 on a quiet one. Readable on a phone. **No em dash characters.** Ends with "Not financial advice."
 
