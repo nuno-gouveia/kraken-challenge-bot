@@ -21,3 +21,4 @@
 {"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508680}
 {"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508681}
 {"ts": "2026-10-07T10:10:45Z", "text": "[button] Done on btc-breakeven", "parsed": {"cmd": "button", "action": "done", "alert": "btc-breakeven"}, "update_id": 70508682}
+{"ts": "2026-11-05T15:37:01Z", "text": "/bought 420 at 76651$", "parsed": {"dry": false, "cmd": "bought", "asset": "BTC", "usd": 420.0, "price": 76651.0, "price_ccy": "USD"}, "update_id": 70508684}

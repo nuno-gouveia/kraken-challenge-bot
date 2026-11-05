@@ -8,8 +8,19 @@
   },
   "balance_usd": 1054.56,
   "balance_basis": "cost basis; equity varies with the open position",
-  "cash_usd": 1054.56,
-  "positions": [],
+  "cash_usd": 634.56,
+  "positions": [
+    {
+      "id": "trade-3",
+      "asset": "BTC",
+      "side": "long",
+      "size_usd": 420.0,
+      "entry_usd": 76651.0,
+      "qty_btc": 0.00547938,
+      "opened_at": "2026-11-05T15:40:47Z",
+      "entry_eur_approx": 68300
+    }
+  ],
   "closed_trades": [
     {
       "id": "trade-1",
@@ -28,7 +39,7 @@
       "result_usd": 4.56
     }
   ],
-  "last_confirmed_at": "2026-10-07T10:15:50Z",
+  "last_confirmed_at": "2026-11-05T15:40:47Z",
   "last_confirmed_via": "telegram",
-  "last_confirmed_text": "/sold 209.31$ of btc at 83786$"
+  "last_confirmed_text": "/bought 420 at 76651$"
 }
