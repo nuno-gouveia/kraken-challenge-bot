@@ -1,7 +1,8 @@
-"""Flash dip: Nuno's setup, tested in analyses/backtests/2026-10-19-flash-dip-vs-dip-setup.md.
+"""Flash dip: Nuno's setup, tested in analyses/backtests/2026-10-19-flash-dip-vs-dip-setup.md
+and, for the more active version of 12 Nov 2026, analyses/backtests/2026-11-12-more-active.md.
 
-BTC falls at least `drop` (5%) under its highest price of the last `window_h`
-(4) hours. The heartbeat sees it within a run and sends a BUY message with the
+BTC falls at least `drop` (4%) under its highest price of the last `window_h`
+(6) hours. The heartbeat sees it within a run and sends a BUY message with the
 plan. Nuno buys only if he can within about 15 minutes. When he reports the
 buy (Done, then /bought; or /bought straight away), three exits are armed from
 his entry: sell at +target, sell at -stop, sell after hold_h hours.
@@ -23,14 +24,14 @@ from src.messages import LISBON, NFA, both, escape, lisbon
 DEFAULTS = {
     "enabled": True,
     "pair": "XBTEUR",
-    "window_h": 4,
-    "drop": 0.05,
+    "window_h": 6,
+    "drop": 0.04,
     "target": 0.02,
     "stop": 0.04,
     "hold_h": 24,
     "act_within_min": 15,
-    "risk": 0.02,
-    "cap": 0.40,
+    "risk_of_room": 0.35,
+    "exit_slip": 0.003,
 }
 CONFIG = Path("config/flash.json")
 
@@ -50,11 +51,27 @@ def is_flash(alert: dict | None) -> bool:
     return bool(alert and isinstance(alert.get("flash"), dict))
 
 
+def risk_usd(size: float, cfg: dict) -> float:
+    """What the trade loses when the stop is hit, slippage included."""
+    return size * (cfg["stop"] + cfg["exit_slip"])
+
+
 def size_usd(account: dict | None, cfg: dict) -> float:
-    """2% of the balance at risk on the stop distance, capped at 40% of the balance, in $10 steps."""
-    balance = float((account or {}).get("cash_usd") or (account or {}).get("balance_usd") or 0)
-    size = min(balance * cfg["risk"] / cfg["stop"], balance * cfg["cap"])
-    return max(0.0, size // 10 * 10)
+    """Risk `risk_of_room` (35%) of the room above the fail level on the stop, slippage included.
+
+    The size shrinks after a loss and grows after a win (docs/strategy.md, Sizing). It is never
+    more than the cash, and never more than the trade that finishes the challenge needs. $10 steps.
+    """
+    acct = account or {}
+    challenge = acct.get("challenge") or {}
+    balance = float(acct.get("cash_usd") or acct.get("balance_usd") or 0)
+    floor, goal = float(challenge.get("fail_usd") or 950), float(challenge.get("pass_usd") or 1120)
+    size = min(balance, cfg["risk_of_room"] * max(0.0, balance - floor) / (cfg["stop"] + cfg["exit_slip"]))
+    size = max(0.0, size // 10 * 10)
+    if goal > balance and cfg["target"] > cfg["exit_slip"]:
+        finishing = -(-(goal - balance) / (cfg["target"] - cfg["exit_slip"]) // 10) * 10  # rounded up: a win must pass
+        size = min(size, finishing)
+    return size
 
 
 def detect(candles, last: float, now: float, cfg: dict) -> tuple[float, int] | None:
@@ -123,7 +140,7 @@ def buy_alert(now: float, top: float, top_t: int, last: float, size: float, cfg:
             "high_eur": round(top, 1), "high_at": alerts.iso(top_t), "signal_eur": round(last, 1),
             "fall": round(1 - last / top, 4), "size_usd": size, "eur_usd": round(eur_usd, 5),
             "target": cfg["target"], "stop": cfg["stop"], "hold_h": cfg["hold_h"],
-            "act_within_min": cfg["act_within_min"],
+            "act_within_min": cfg["act_within_min"], "risk_usd": round(risk_usd(size, cfg)),
         },
     }
 
@@ -142,7 +159,8 @@ def buy_message(a: dict, now: float) -> str:
         "",
         "The plan, from about this price (set from your actual buy price once you report it):",
         f"- Sell at +{f['target']:.0%}: about {both(tgt, 'EUR', rate)}",
-        f"- Exit at -{f['stop']:.0%}: about {both(stop, 'EUR', rate)}",
+        f"- Exit at -{f['stop']:.0%}: about {both(stop, 'EUR', rate)}"
+        + (f" (a loss of about ${f['risk_usd']:,.0f})" if f.get("risk_usd") else ""),
         f"- Or sell after {f['hold_h']} hours: {lisbon(deadline, now)} Lisbon",
         "The bot sets all three alerts for you.",
         "",

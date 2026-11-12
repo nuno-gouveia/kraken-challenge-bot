@@ -23,7 +23,7 @@ Otherwise, briefly: the print against expectations, what it did to Fed expectati
 Apply `docs/strategy.md` exactly, in this order:
 
 1. **An open position comes first:** hold, or exit now. The rule for holding through the print was decided before it; the question now is only whether a level the plan depends on broke.
-2. **The flash dip:** did tonight's move send a signal, or come close (the trigger is 5% under the 4-hour high)? If a signal went out, judge it: a flush (forced selling, liquidations, the rule's case) or a real break (the print changes the outlook, more selling likely). Say which, in one line; Nuno decides.
+2. **The flash dip:** did tonight's move send a signal, or come close (the trigger is 4% under the 6-hour high)? If a signal went out, judge it: a flush (forced selling, liquidations, the rule's case) or a real break (the print changes the outlook, more selling likely). Say which, in one line; Nuno decides.
 3. **No new entries from this check.** Buys come only from the flash dip. If tonight suggests pausing it (for example a shock with more to come), propose that in one line; `config/flash.json` changes only with Nuno's agreement.
 
 ## 4. Alerts

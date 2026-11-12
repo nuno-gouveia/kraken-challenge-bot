@@ -48,14 +48,30 @@ def test_detect_needs_the_full_drop_inside_the_window():
     cfg = dict(flash.DEFAULTS)
     candles = [Candle(int(NOW) - 3 * 3600, 0, 78500, 78400, 78450), Candle(int(NOW) - 60, 0, 74700, 74500, 74550)]
     assert flash.detect(candles, 74550, NOW, cfg) == (78500, int(NOW) - 3 * 3600)
-    assert flash.detect(candles, 74800, NOW, cfg) is None  # only 4.7% down
-    old = [Candle(int(NOW) - 5 * 3600, 0, 78500, 78400, 78450)] + candles[1:]
-    assert flash.detect(old, 74550, NOW, cfg) is None  # the high is outside the 4 hours
+    assert flash.detect(candles, 75500, NOW, cfg) is None  # only 3.8% down
+    old = [Candle(int(NOW) - 7 * 3600, 0, 78500, 78400, 78450)] + candles[1:]
+    assert flash.detect(old, 74550, NOW, cfg) is None  # the high is outside the 6 hours
 
 
-def test_size_risks_2pct_capped_at_40pct():
-    assert flash.size_usd({"cash_usd": 1054.56}, flash.DEFAULTS) == 420
-    assert flash.size_usd({"cash_usd": 2000}, flash.DEFAULTS) == 800  # 2% / 4% = 50%, cap 40%
+def test_size_risks_35pct_of_the_room_above_the_floor():
+    cfg = flash.DEFAULTS
+    assert flash.size_usd({"cash_usd": 1050.60}, cfg) == 810   # 35% of $100.60 = $35.21 at risk on 4.3%
+    assert flash.size_usd({"cash_usd": 1015.00}, cfg) == 520   # after a loss the next trade is smaller
+    assert flash.size_usd({"cash_usd": 1085.00}, cfg) == 1080  # after wins: up to the whole cash, in $10 steps
+    assert flash.size_usd({"cash_usd": 960.00}, cfg) == 80
+    assert flash.size_usd({"cash_usd": 950.00}, cfg) == 0
+    assert round(flash.risk_usd(810, cfg), 2) == 34.83
+
+
+def test_size_is_capped_at_the_trade_that_finishes_the_challenge():
+    cfg = flash.DEFAULTS
+    assert flash.size_usd({"cash_usd": 1105.00}, cfg) == 890   # +2% less slippage on $890 is $15.13: it passes
+    assert flash.size_usd({"cash_usd": 1100.00}, cfg) == 1100  # $20 needs $1,180: the cash is the limit
+
+
+def test_size_reads_the_fail_and_pass_levels_from_the_account():
+    acct = {"cash_usd": 2100.0, "challenge": {"fail_usd": 1900, "pass_usd": 2240}}
+    assert flash.size_usd(acct, flash.DEFAULTS) == 1620  # 35% of $200 on 4.3%
 
 
 def test_signal_goes_out_once_with_the_plan(state):
@@ -63,15 +79,15 @@ def test_signal_goes_out_once_with_the_plan(state):
     notifier, summary = run(state, FakeDip(), flash_cfg=ON)
     [(text, silent)] = notifier.sent
     assert silent is False and notifier.markups[0]["inline_keyboard"][0][0]["callback_data"].startswith("done:flash-")
-    assert text.startswith("<b>ACTION: BUY $420 of BTC at market now (flash dip).</b>")
+    assert text.startswith("<b>ACTION: BUY $850 of BTC at market now (flash dip).</b>")
     assert "BTC fell 5.0% in the last hours: from EUR 78,500" in text
     assert "<b>Only buy if you can do it within 15 minutes.</b>" in text
     assert "- Sell at +2%: about EUR 76,000 / $85,634" in text
-    assert "- Exit at -4%: about EUR 71,600 / $80,676" in text
+    assert "- Exit at -4%: about EUR 71,600 / $80,676 (a loss of about $37)" in text
     assert "- Or sell after 24 hours: 4 Oct 13:00 Lisbon" in text
-    assert "/bought 420 at &lt;price&gt;" in text and text.endswith("Not financial advice.")
+    assert "/bought 850 at &lt;price&gt;" in text and text.endswith("Not financial advice.")
     a = flash_alert(state)
-    assert a["status"] == "fired" and a["trade"] == "buy" and a["flash"]["size_usd"] == 420
+    assert a["status"] == "fired" and a["trade"] == "buy" and a["flash"]["size_usd"] == 850 and a["flash"]["risk_usd"] == 37
     assert read(state, "heartbeat.json")["flash_signal_at"] == "2026-10-03T12:00:40Z"
     assert summary == [f"flash dip: {a['id']}"]
 
@@ -102,13 +118,13 @@ def test_done_arms_exits_and_bought_moves_them_to_the_real_price(state):
     run(state, FakeDip(now=NOW + 60), notifier=notifier, now=NOW + 60, flash_cfg=ON)
     reply = notifier.sent[0][0]
     assert "Exits set from the signal price for now" in reply
-    assert "/bought 420 at &lt;price&gt;" in reply
+    assert "/bought 850 at &lt;price&gt;" in reply
     s = status(state)
     assert s[f"{aid}-target"] == s[f"{aid}-stop"] == s[f"{aid}-time"] == "armed"
     tgt = next(a for a in read(state, "alerts.json")["alerts"] if a["id"] == f"{aid}-target")
     assert tgt["level"] == 76000
 
-    notifier = FakeNotifier(updates=[msg(7, "/bought 420 at 83000")])
+    notifier = FakeNotifier(updates=[msg(7, "/bought 850 at 83000")])
     run(state, FakeDip(now=NOW + 120), notifier=notifier, now=NOW + 120, flash_cfg=ON)
     reply = notifier.sent[0][0]
     assert "<b>Flash-dip exits set from your price.</b>" in reply
@@ -119,12 +135,12 @@ def test_done_arms_exits_and_bought_moves_them_to_the_real_price(state):
     assert by[f"{aid}-stop"]["level"] == -(-entry_eur * 0.96 // 50) * 50
     assert by[f"{aid}-time"]["at"] == "2026-10-04T12:01:40Z"  # 24h from the Done tap, unchanged
     assert by[aid]["awaiting_fill"] is False
-    assert read(state, "account.json")["positions"][0]["size_usd"] == 420
+    assert read(state, "account.json")["positions"][0]["size_usd"] == 850
     errors, _ = validate_alerts.check(doc, NOW + 120)
     assert errors == []
 
     # One position at a time: no new signal while it is open.
-    notifier, _ = run(state, FakeDip(now=NOW + 5 * 3600), now=NOW + 5 * 3600, flash_cfg=ON)
+    notifier, _ = run(state, FakeDip(now=NOW + 7 * 3600), now=NOW + 7 * 3600, flash_cfg=ON)
     assert not any("BUY" in t for t, _ in notifier.sent)
 
 
@@ -154,10 +170,10 @@ def test_an_exit_disarms_the_other_two(state):
 def test_unanswered_buy_lapses_after_two_hours_and_unblocks(state):
     cash_only(state)
     run(state, FakeDip(), flash_cfg=ON)
-    later = NOW + 5 * 3600
+    later = NOW + 7 * 3600
     notifier, summary = run(state, FakeDip(now=later), now=later, flash_cfg=ON)
     assert f"{flash_alert(state)['id']} lapsed" in summary[0]
-    assert any("BUY $420" in t for t, _ in notifier.sent)  # a fresh dip in a new window signals again
+    assert any("BUY $850" in t for t, _ in notifier.sent)  # a fresh dip in a new window signals again
 
 
 def test_not_done_lets_it_go(state):
