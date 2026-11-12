@@ -36,8 +36,8 @@ All five milestones are done: the new system went live on 11 Oct 2026 (see `docs
 | `config/flash.json` | The flash dip settings (on/off, 5% drop in 4 hours, +2% / -4% / 24h, sizing); `src/flash.py` | Nuno (via any Claude session) |
 | `data/snapshot.json` | Latest market snapshot and indicators, computed from Kraken OHLC | Snapshot job |
 | `analyses/YYYY-MM-DD-brief.md` | The daily brief, as sent | Claude |
-| `data/history/` | ~3 years of 1h and 15m BTC/EUR and BTC/USDT candles (Binance archive) for backtests, plus Kraken's last 720 hourly candles to compare | History job (`history.yml`, `src/history.py`), monthly |
-| `src/backtest.py`, `analyses/backtests/` | Backtests of trading rules on `data/history/`, and their reports. Research only | Claude |
+| `data/history/` | ~3 years of 1h and 15m BTC/EUR and BTC/USDT candles (Binance archive) for backtests, 15m candles for ETH, LINK, BCH, DOGE and SHIB against USDT (from the first history run after 12 Nov 2026), plus Kraken's last 720 hourly candles to compare | History job (`history.yml`, `src/history.py`), monthly |
+| `src/backtest.py`, `src/backtest_active.py`, `analyses/backtests/` | Backtests of trading rules on `data/history/`, and their reports. `backtest_active.py` is the stricter one: it models quiet hours and the $950 floor inside a trade, and compares position sizes. Research only | Claude |
 | `docs/daily-brief.md` | The procedure the scheduled brief session follows | Claude, with Nuno's agreement |
 | `docs/event-check.md`, `analyses/YYYY-MM-DD-event-*.md` | The evening check after a tier-one US release, and what it sent | Claude (scheduled event-check sessions) |
 | `docs/strategy.md` | The trading rules and risk framework agreed with Nuno | Claude, only with Nuno's agreement |
