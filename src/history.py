@@ -3,7 +3,8 @@
     python -m src.history [--months 37] [--root data/history]
 
 Runs on GitHub Actions (history.yml); Claude's cloud sessions can't reach the
-exchanges. Downloads 1-hour and 15-minute candles for BTC/EUR and BTC/USDT from
+exchanges. Downloads 1-hour and 15-minute candles for BTC/EUR and BTC/USDT, and
+15-minute candles for ETH, LINK, BCH, DOGE and SHIB against USDT, from
 Binance's public archive (data.binance.vision): about three years of history,
 which Kraken's API does not serve (it returns the last 720 candles only).
 Binance's BTC/EUR tracks Kraken's closely; Kraken's own last 720 hourly
@@ -34,6 +35,9 @@ from src import kraken
 ARCHIVE = "https://data.binance.vision/data/spot"
 SYMBOLS = ("BTCEUR", "BTCUSDT")
 INTERVALS = ("1h", "15m")
+# The challenge's other five assets, 15-minute candles only (a backtest can build hours from them).
+ALT_SYMBOLS = ("ETHUSDT", "LINKUSDT", "BCHUSDT", "DOGEUSDT", "SHIBUSDT")
+ALT_INTERVALS = ("15m",)
 KRAKEN_CHECK = {"XBTEUR": "kraken-XBTEUR", "XBTUSD": "kraken-XBTUSD"}
 
 
@@ -99,18 +103,18 @@ def update(root: Path, months: int, session: requests.Session, today: date | Non
     today = today or datetime.now(timezone.utc).date()
     current = today.strftime("%Y-%m")
     written = []
-    for symbol in SYMBOLS:
-        for interval in INTERVALS:
-            for month in months_back(today, months):
-                path = root / symbol / interval / f"{month}.csv.gz"
-                if path.exists() and month != current:
-                    continue  # past months never change
-                rows = month_rows(session, symbol, interval, month, today)
-                if rows:
-                    write_month(path, rows)
-                    written.append(str(path))
-                else:
-                    print(f"history: nothing for {symbol} {interval} {month}")
+    wanted = [(s, i) for s in SYMBOLS for i in INTERVALS] + [(s, i) for s in ALT_SYMBOLS for i in ALT_INTERVALS]
+    for symbol, interval in wanted:
+        for month in months_back(today, months):
+            path = root / symbol / interval / f"{month}.csv.gz"
+            if path.exists() and month != current:
+                continue  # past months never change
+            rows = month_rows(session, symbol, interval, month, today)
+            if rows:
+                write_month(path, rows)
+                written.append(str(path))
+            else:
+                print(f"history: nothing for {symbol} {interval} {month}")
     return written
 
 

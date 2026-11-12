@@ -60,8 +60,8 @@ WHY
 - Breadth: <one line>
 
 SETUPS
-- Flash dip: <armed / paused>, buy below EUR <4h high x 0.95> / $<n> right now; <signals and trades since the last brief, or "no signal">.
-- Results so far: <n trades, n won, net $> (backtest: about 8 in 10 win).
+- Flash dip: <armed / paused>, buy below EUR <6h high x 0.96> / $<n> right now, size $<n> (about $<n> lost at the -4% exit); <signals and trades since the last brief, or "no signal">.
+- Results so far: <n trades, n won, net $> (backtest: about 7 in 10 win).
 - Waiting for your answer: <open question in one line, only if one is open>
 
 REFERENCE LEVELS (information only, not alerts)
@@ -73,7 +73,7 @@ Sources: <at most 3 links>
 Not financial advice.
 ```
 
-Rules carried over from `docs/strategy.md`: every price Nuno might act on in EUR and USD, Lisbon times, a survival check line in ACCOUNT whenever a buy or add is on the table, no em dash, ends with "Not financial advice."
+Rules carried over from `docs/strategy.md`: every price Nuno might act on in EUR and USD, Lisbon times, the next flash-dip size in ACCOUNT or SETUPS (35% of the room above $950 at risk), no em dash, ends with "Not financial advice."
 
 ## Example: 5 Oct 2026, written after the half sale was reported (about 370 words; the old brief that day was about 1,900 before its sources)
 
@@ -115,8 +115,8 @@ WHY
 - Breadth: improved, four of six coins up on the week.
 
 SETUPS
-- Flash dip: armed; a signal needs BTC under about EUR 73,600 / $82,250 within 4 hours of today's high. No signal yet.
-- Results so far: no flash-dip trades yet (backtest: about 8 in 10 win).
+- Flash dip: armed; a signal needs BTC under about EUR 74,350 / $83,100 within 6 hours of today's high. No signal yet.
+- Results so far: no flash-dip trades yet (backtest: about 7 in 10 win).
 
 REFERENCE LEVELS (information only, not alerts)
 R2 EUR 77,881 / $87,000 · R1 EUR 76,520 / $85,480 · S1 EUR 75,336 / $84,158 · Entry EUR 74,613 / $84,065

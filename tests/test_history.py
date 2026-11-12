@@ -49,7 +49,7 @@ def test_update_writes_one_file_per_month_and_skips_past_months_it_has(tmp_path)
     archive = FakeArchive()
     today = date(2026, 10, 3)
     written = history.update(tmp_path, 3, archive, today=today)
-    assert sorted(p.rsplit("/", 1)[1] for p in written) == ["2026-08.csv.gz"] * 4 + ["2026-10.csv.gz"] * 4  # 2026-09 is missing
+    assert sorted(p.rsplit("/", 1)[1] for p in written) == ["2026-08.csv.gz"] * 9 + ["2026-10.csv.gz"] * 9  # 2026-09 is missing; 2 BTC pairs x 2 intervals + 5 alts
     f = tmp_path / "BTCEUR" / "1h" / "2026-10.csv.gz"
     assert gzip.decompress(f.read_bytes()).decode().splitlines() == ["time,open,high,low,close,volume", "1759276800,1,2,0.5,1.5,3"]
     # the current month comes from the daily files of the days already over

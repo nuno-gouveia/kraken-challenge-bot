@@ -1,13 +1,13 @@
 {
   "enabled": true,
   "pair": "XBTEUR",
-  "window_h": 4,
-  "drop": 0.05,
+  "window_h": 6,
+  "drop": 0.04,
   "target": 0.02,
   "stop": 0.04,
   "hold_h": 24,
   "act_within_min": 15,
-  "risk": 0.02,
-  "cap": 0.40,
-  "about": "Flash dip (docs/strategy.md, src/flash.py): BTC falls `drop` under its high of the last `window_h` hours, outside quiet hours, with no position open: BUY, sized for `risk` of the balance on the `stop` distance and capped at `cap` of it. Exits from the real fill: +target, -stop, or after hold_h hours. Tested in analyses/backtests/2026-10-19-flash-dip-vs-dip-setup.md. Set enabled to false to pause it. Change numbers only with Nuno's agreement."
+  "risk_of_room": 0.35,
+  "exit_slip": 0.003,
+  "about": "Flash dip (docs/strategy.md, src/flash.py): BTC falls `drop` under its high of the last `window_h` hours, outside quiet hours, with no position open: BUY. Size: `risk_of_room` of the room above the $950 fail level at risk on the `stop` plus `exit_slip`, never more than the cash, never more than the finishing trade needs. Exits from the real fill: +target, -stop, or after hold_h hours. Tested in analyses/backtests/2026-10-19-flash-dip-vs-dip-setup.md and 2026-11-12-more-active.md (Nuno chose 4% in 6h and 35% of the room on 12 Nov 2026). Set enabled to false to pause it. Change numbers only with Nuno's agreement."
 }
