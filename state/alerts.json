@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-11-15T08:40:00Z",
+  "updated_at": "2026-11-16T08:25:00Z",
   "updated_by": "claude (daily brief)",
-  "eur_usd": 1.0989,
-  "note": "No position is open. Nothing is armed; buys come only from the flash dip. Spent flash-20261105 records (done/disabled, over 7 days old) dropped.",
+  "eur_usd": 1.1009,
+  "note": "No position is open. Nothing is armed; buys come only from the flash dip. Unchanged since 15 Nov.",
   "alerts": [
     {
       "id": "btc-watch-low",
