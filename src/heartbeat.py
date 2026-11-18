@@ -56,8 +56,11 @@ class Notifier:
         try:
             return telegram.get_updates(self.session, self.token, offset)
         except telegram.TelegramError as exc:
-            print(f"telegram: {exc}")
-            self.failed = True
+            # Reading is safe to skip: Telegram keeps the updates until a later
+            # run confirms them, so the next run picks them up. Failing the job
+            # here only sent a failure email for a timeout (8 Nov to 18 Nov).
+            # A failed send still fails the run (see send()).
+            print(f"::warning::telegram: {exc}; messages will be read by the next run")
             return []
 
     def answer(self, callback_id: str, text: str) -> None:
