@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-11-17T08:25:00Z",
+  "updated_at": "2026-11-21T08:40:00Z",
   "updated_by": "claude (daily brief)",
-  "eur_usd": 1.0998,
-  "note": "No position is open. Nothing is armed; buys come only from the flash dip. Unchanged since 15 Nov.",
+  "eur_usd": 1.0934,
+  "note": "Open position trade-4 (flash-20261120-1545). Its -4% exit fired at 06:30 Lisbon after an overnight touch; target and 24h time exit stay armed until he reports the sale. No alert changed.",
   "alerts": [
     {
       "id": "btc-watch-low",
