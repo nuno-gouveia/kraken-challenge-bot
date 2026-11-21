@@ -116,8 +116,8 @@
       "pair": "XBTEUR",
       "kind": "action",
       "trade": "sell_all",
-      "status": "held",
-      "armed_at": "2026-11-20T15:50:49Z",
+      "status": "fired",
+      "armed_at": "2026-11-21T06:30:00Z",
       "valid_from": null,
       "valid_until": null,
       "guard_band": null,
@@ -134,8 +134,12 @@
           "flash-20261120-1545-time"
         ]
       },
-      "held_at": "2026-11-21T03:35:49Z",
-      "held_first_touch_at": "2026-11-21T03:32:00Z"
+      "held_overnight": {
+        "first_touch_at": "2026-11-21T03:32:00Z",
+        "rechecked_at": "2026-11-21T06:30:00Z"
+      },
+      "fired_at": "2026-11-21T06:30:48Z",
+      "fired_source": "kraken"
     },
     {
       "pair": "XBTEUR",
