@@ -116,7 +116,7 @@
       "pair": "XBTEUR",
       "kind": "action",
       "trade": "sell_all",
-      "status": "armed",
+      "status": "held",
       "armed_at": "2026-11-20T15:50:49Z",
       "valid_from": null,
       "valid_until": null,
@@ -133,7 +133,9 @@
           "flash-20261120-1545-target",
           "flash-20261120-1545-time"
         ]
-      }
+      },
+      "held_at": "2026-11-21T03:35:49Z",
+      "held_first_touch_at": "2026-11-21T03:32:00Z"
     },
     {
       "pair": "XBTEUR",
