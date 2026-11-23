@@ -167,6 +167,37 @@
         ]
       },
       "disabled_reason": "on_done of flash-20261120-1545-stop"
+    },
+    {
+      "id": "flash-20261123-1745",
+      "pair": "XBTEUR",
+      "direction": "time",
+      "at": "2026-11-23T17:45:58Z",
+      "level": null,
+      "kind": "action",
+      "trade": "buy",
+      "message": "BUY $600 of BTC at market now (flash dip).",
+      "status": "fired",
+      "armed_at": "2026-11-23T17:45:58Z",
+      "fired_at": "2026-11-23T17:45:58Z",
+      "fired_source": "kraken",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": null,
+      "flash": {
+        "high_eur": 58970.0,
+        "high_at": "2026-11-23T14:27:00Z",
+        "signal_eur": 56233.6,
+        "fall": 0.0464,
+        "size_usd": 600.0,
+        "eur_usd": 1.08892,
+        "target": 0.02,
+        "stop": 0.04,
+        "hold_h": 24,
+        "act_within_min": 15,
+        "risk_usd": 26
+      }
     }
   ]
 }
