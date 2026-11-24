@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-11-23T08:25:00Z",
+  "updated_at": "2026-11-24T08:30:00Z",
   "updated_by": "claude (daily brief)",
-  "eur_usd": 1.0988,
-  "note": "No position open (trade-4 sold 21 Nov at $57,639). No price alert needed; the flash dip watches for entries. No alert changed.",
+  "eur_usd": 1.09105,
+  "note": "Open: trade-5, $600 bought 23 Nov at $61,666 (flash-20261123-1745). Its three exits stay as the bot set them. No alert changed.",
   "alerts": [
     {
       "id": "btc-watch-low",
