@@ -230,7 +230,7 @@
       "pair": "XBTEUR",
       "kind": "action",
       "trade": "sell_all",
-      "status": "armed",
+      "status": "fired",
       "armed_at": "2026-11-23T18:00:51Z",
       "valid_from": null,
       "valid_until": null,
@@ -247,7 +247,9 @@
           "flash-20261123-1745-target",
           "flash-20261123-1745-time"
         ]
-      }
+      },
+      "fired_at": "2026-11-24T10:50:47Z",
+      "fired_source": "kraken"
     },
     {
       "pair": "XBTEUR",
