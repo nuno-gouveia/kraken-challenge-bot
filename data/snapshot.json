@@ -1,23 +1,23 @@
 {
-  "fetched_at": "2026-11-24T08:12:53Z",
+  "fetched_at": "2026-11-24T17:47:31Z",
   "source": "Kraken public API (OHLC 1440 and 60 minute)",
   "notes": "Daily indicators use closed UTC daily candles only; open_candle is today's, still moving. change_24h_pct is against the open of the hourly candle 24 hours back; change_7d_pct against the daily close seven days back.",
-  "eur_usd": 1.09105,
+  "eur_usd": 1.09699,
   "assets": {
     "BTC": {
       "USD": {
         "pair": "XBTUSD",
-        "last": 60164.6,
-        "change_24h_pct": -1.97,
-        "high_24h": 64520.3,
-        "low_24h": 59362.8,
-        "change_7d_pct": -7.17,
+        "last": 59911.4,
+        "change_24h_pct": -3.66,
+        "high_24h": 61706.8,
+        "low_24h": 59197.4,
+        "change_7d_pct": -7.56,
         "open_candle": {
           "date": "2026-11-24",
           "open": 61199.3,
           "high": 61592.2,
-          "low": 59362.8,
-          "last": 60150.9
+          "low": 59197.4,
+          "last": 59906.6
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -45,17 +45,17 @@
       },
       "EUR": {
         "pair": "XBTEUR",
-        "last": 55143.9,
-        "change_24h_pct": -1.24,
-        "high_24h": 58970.0,
-        "low_24h": 54451.5,
-        "change_7d_pct": -6.5,
+        "last": 54614.5,
+        "change_24h_pct": -4.36,
+        "high_24h": 56681.7,
+        "low_24h": 54000.0,
+        "change_7d_pct": -7.4,
         "open_candle": {
           "date": "2026-11-24",
           "open": 56106.7,
           "high": 56464.6,
-          "low": 54451.5,
-          "last": 55143.9
+          "low": 54000.0,
+          "last": 54614.5
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -85,17 +85,17 @@
     "ETH": {
       "USD": {
         "pair": "ETHUSD",
-        "last": 1692.41,
-        "change_24h_pct": -1.62,
-        "high_24h": 1843.93,
-        "low_24h": 1667.9,
-        "change_7d_pct": -6.99,
+        "last": 1680.32,
+        "change_24h_pct": -4.95,
+        "high_24h": 1748.29,
+        "low_24h": 1661.83,
+        "change_7d_pct": -7.65,
         "open_candle": {
           "date": "2026-11-24",
           "open": 1708.2,
           "high": 1719.4,
-          "low": 1667.9,
-          "last": 1692.41
+          "low": 1661.83,
+          "last": 1680.24
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -123,17 +123,17 @@
       },
       "EUR": {
         "pair": "ETHEUR",
-        "last": 1551.61,
-        "change_24h_pct": -0.88,
-        "high_24h": 1684.67,
-        "low_24h": 1528.98,
-        "change_7d_pct": -6.25,
+        "last": 1532.0,
+        "change_24h_pct": -5.63,
+        "high_24h": 1606.06,
+        "low_24h": 1516.28,
+        "change_7d_pct": -7.44,
         "open_candle": {
           "date": "2026-11-24",
           "open": 1566.97,
           "high": 1575.61,
-          "low": 1528.98,
-          "last": 1551.61
+          "low": 1516.28,
+          "last": 1532.0
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -163,17 +163,17 @@
     "LINK": {
       "USD": {
         "pair": "LINKUSD",
-        "last": 9.03109,
-        "change_24h_pct": 1.22,
-        "high_24h": 9.54542,
-        "low_24h": 8.8593,
-        "change_7d_pct": -1.13,
+        "last": 8.87214,
+        "change_24h_pct": -3.96,
+        "high_24h": 9.14468,
+        "low_24h": 8.72692,
+        "change_7d_pct": -2.87,
         "open_candle": {
           "date": "2026-11-24",
           "open": 9.00493,
           "high": 9.14468,
-          "low": 8.88546,
-          "last": 9.03109
+          "low": 8.72692,
+          "last": 8.87214
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -201,17 +201,17 @@
       },
       "EUR": {
         "pair": "LINKEUR",
-        "last": 8.27894,
-        "change_24h_pct": 2.02,
-        "high_24h": 8.7291,
-        "low_24h": 8.101,
-        "change_7d_pct": -0.22,
+        "last": 8.1,
+        "change_24h_pct": -4.49,
+        "high_24h": 8.38044,
+        "low_24h": 7.95,
+        "change_7d_pct": -2.37,
         "open_candle": {
           "date": "2026-11-24",
           "open": 8.24981,
           "high": 8.38044,
-          "low": 8.15239,
-          "last": 8.27894
+          "low": 7.95,
+          "last": 8.1
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -241,17 +241,17 @@
     "BCH": {
       "USD": {
         "pair": "BCHUSD",
-        "last": 199.53,
-        "change_24h_pct": -0.1,
-        "high_24h": 212.7,
-        "low_24h": 197.02,
-        "change_7d_pct": -4.27,
+        "last": 197.65,
+        "change_24h_pct": -4.2,
+        "high_24h": 203.86,
+        "low_24h": 194.9,
+        "change_7d_pct": -5.17,
         "open_candle": {
           "date": "2026-11-24",
           "open": 200.31,
           "high": 203.86,
-          "low": 197.02,
-          "last": 199.53
+          "low": 194.9,
+          "last": 197.65
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -279,17 +279,17 @@
       },
       "EUR": {
         "pair": "BCHEUR",
-        "last": 182.67,
-        "change_24h_pct": 0.53,
-        "high_24h": 194.34,
-        "low_24h": 180.94,
-        "change_7d_pct": -3.63,
+        "last": 180.17,
+        "change_24h_pct": -4.94,
+        "high_24h": 186.72,
+        "low_24h": 177.56,
+        "change_7d_pct": -4.95,
         "open_candle": {
           "date": "2026-11-24",
           "open": 183.68,
           "high": 186.72,
-          "low": 180.94,
-          "last": 182.67
+          "low": 177.56,
+          "last": 180.17
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -319,17 +319,17 @@
     "DOGE": {
       "USD": {
         "pair": "XDGUSD",
-        "last": 0.056011,
-        "change_24h_pct": 0.89,
-        "high_24h": 0.0601833,
-        "low_24h": 0.05524,
-        "change_7d_pct": -4.9,
+        "last": 0.0552254,
+        "change_24h_pct": -4.98,
+        "high_24h": 0.0574535,
+        "low_24h": 0.0543727,
+        "change_7d_pct": -6.23,
         "open_candle": {
           "date": "2026-11-24",
           "open": 0.0563051,
           "high": 0.0571094,
-          "low": 0.05524,
-          "last": 0.056011
+          "low": 0.0543727,
+          "last": 0.0552254
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -357,17 +357,17 @@
       },
       "EUR": {
         "pair": "XDGEUR",
-        "last": 0.0513535,
-        "change_24h_pct": 1.69,
-        "high_24h": 0.055,
-        "low_24h": 0.0503732,
-        "change_7d_pct": -4.13,
+        "last": 0.0504869,
+        "change_24h_pct": -5.38,
+        "high_24h": 0.0527608,
+        "low_24h": 0.0495249,
+        "change_7d_pct": -5.75,
         "open_candle": {
           "date": "2026-11-24",
           "open": 0.0516072,
           "high": 0.0522884,
-          "low": 0.050645,
-          "last": 0.0513535
+          "low": 0.0495249,
+          "last": 0.0504869
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -397,17 +397,17 @@
     "SHIB": {
       "USD": {
         "pair": "SHIBUSD",
-        "last": 3.635e-06,
-        "change_24h_pct": 0.69,
-        "high_24h": 3.857e-06,
-        "low_24h": 3.586e-06,
-        "change_7d_pct": -5.73,
+        "last": 3.571e-06,
+        "change_24h_pct": -4.26,
+        "high_24h": 3.7e-06,
+        "low_24h": 3.515e-06,
+        "change_7d_pct": -7.39,
         "open_candle": {
           "date": "2026-11-24",
           "open": 3.637e-06,
           "high": 3.687e-06,
-          "low": 3.586e-06,
-          "last": 3.635e-06
+          "low": 3.515e-06,
+          "last": 3.571e-06
         },
         "daily": {
           "last_closed_date": "2026-11-23",
@@ -435,17 +435,17 @@
       },
       "EUR": {
         "pair": "SHIBEUR",
-        "last": 3.333e-06,
-        "change_24h_pct": 1.4,
-        "high_24h": 3.519e-06,
-        "low_24h": 3.288e-06,
-        "change_7d_pct": -4.77,
+        "last": 3.253e-06,
+        "change_24h_pct": -4.99,
+        "high_24h": 3.387e-06,
+        "low_24h": 3.207e-06,
+        "change_7d_pct": -7.06,
         "open_candle": {
           "date": "2026-11-24",
           "open": 3.335e-06,
           "high": 3.379e-06,
-          "low": 3.295e-06,
-          "last": 3.333e-06
+          "low": 3.207e-06,
+          "last": 3.253e-06
         },
         "daily": {
           "last_closed_date": "2026-11-23",
