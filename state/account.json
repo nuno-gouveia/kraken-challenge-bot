@@ -6,9 +6,9 @@
     "long_only": true,
     "stop_loss_orders": false
   },
-  "balance_usd": 911.0,
+  "balance_usd": 1008.29,
   "balance_basis": "cost basis; equity varies with the open position",
-  "cash_usd": 911.0,
+  "cash_usd": 1008.29,
   "positions": [],
   "closed_trades": [
     {
@@ -49,10 +49,13 @@
       "size_usd": 600.0,
       "opened_at": "2026-11-23T18:00:51Z",
       "closed_at": "2026-11-24T18:10:50Z",
-      "result_usd": -112.95
+      "result_usd": -15.66,
+      "exit_usd": 60057.0,
+      "corrected_at": "2026-11-25T10:47:32Z",
+      "correction": "Nuno: the sale was at $60,057, not $50,057 (typo in the /sold report)"
     }
   ],
-  "last_confirmed_at": "2026-11-24T18:10:50Z",
-  "last_confirmed_via": "telegram",
-  "last_confirmed_text": "/sold all at 50057$"
+  "last_confirmed_at": "2026-11-25T10:47:32Z",
+  "last_confirmed_via": "claude (correction stated by Nuno)",
+  "last_confirmed_text": "sold all at 60057$ (corrects /sold all at 50057$)"
 }
