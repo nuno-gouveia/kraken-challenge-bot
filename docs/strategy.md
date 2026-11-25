@@ -65,6 +65,7 @@ The size shrinks after a loss and grows after a win. So a run of losses slows do
 - **One position at a time, BTC only.**
 - **The finishing trade:** when a +2% win on a smaller position already reaches $1,120, the bot caps the size at that (for example $890 at a balance of $1,105). Take the trade that finishes it rather than a bigger one.
 - **Balance touches $975:** stop and reassess with Nuno before the next buy. The rule's sizes are small by then (about $200). The choice is to carry on at those sizes or to let this challenge go and start a fresh one.
+- **Checkpoint on 31 Dec 2026 (Nuno, 25 Nov 2026).** After three flash-dip losses in a row (trades 3 to 5, -$46.27 in all) Nuno chose to carry on with the rule unchanged, with two checkpoints: the $975 line above, and 31 December 2026. If the challenge has not passed by the end of 31 Dec, reassess with Nuno and consider a different strategy. Every brief shows the days left to the checkpoint and the distance to $975.
 
 ### What this accepts (and what it replaced)
 
