@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-11-25T08:30:00Z",
+  "updated_at": "2026-11-26T08:13:28Z",
   "updated_by": "claude (daily brief)",
-  "eur_usd": 1.09315,
-  "note": "No position: trade-5 closed 24 Nov 18:10 UTC (reported at $50,057, likely a typo for $60,057; account not changed until Nuno states it). No alert changed; the flash dip sizes to $0 while the recorded balance is $911.",
+  "eur_usd": 1.09705,
+  "note": "No position: trade-5 closed 24 Nov 18:10 UTC at $60,057 (corrected by Nuno 25 Nov). No alert changed; only the flash dip is live, sized to $470 at a balance of $1,008.29.",
   "alerts": [
     {
       "id": "btc-watch-low",
