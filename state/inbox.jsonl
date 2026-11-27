@@ -31,3 +31,5 @@
 {"ts": "2026-11-24T18:05:48Z", "text": "[button] Done on flash-20261123-1745-time", "parsed": {"cmd": "button", "action": "done", "alert": "flash-20261123-1745-time"}, "update_id": 70508692}
 {"ts": "2026-11-24T18:09:36Z", "text": "/sold all at 50057$", "parsed": {"dry": false, "cmd": "sold", "asset": "BTC", "amount": "all", "price": 50057.0, "price_ccy": "USD"}, "update_id": 70508693}
 {"ts": "2026-11-27T15:02:17Z", "text": "/bought 480 at 58992", "parsed": {"dry": false, "cmd": "bought", "asset": "BTC", "usd": 480.0, "price": 58992.0, "price_ccy": "USD"}, "update_id": 70508695}
+{"ts": "2026-11-27T15:40:48Z", "text": "[button] Done on flash-20261127-1500-target", "parsed": {"cmd": "button", "action": "done", "alert": "flash-20261127-1500-target"}, "update_id": 70508696}
+{"ts": "2026-11-27T16:03:33Z", "text": "/sold all at 59934", "parsed": {"dry": false, "cmd": "sold", "asset": "BTC", "amount": "all", "price": 59934.0, "price_ccy": "USD"}, "update_id": 70508697}

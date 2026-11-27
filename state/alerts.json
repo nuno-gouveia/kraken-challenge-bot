@@ -320,7 +320,7 @@
       "pair": "XBTEUR",
       "kind": "action",
       "trade": "sell_all",
-      "status": "fired",
+      "status": "done",
       "armed_at": "2026-11-27T15:05:51Z",
       "valid_from": null,
       "valid_until": null,
@@ -339,13 +339,16 @@
         ]
       },
       "fired_at": "2026-11-27T15:40:48Z",
-      "fired_source": "kraken"
+      "fired_source": "kraken",
+      "done_at": "2026-11-27T16:05:47Z",
+      "done_via": "button",
+      "awaiting_fill": false
     },
     {
       "pair": "XBTEUR",
       "kind": "action",
       "trade": "sell_all",
-      "status": "armed",
+      "status": "disabled",
       "armed_at": "2026-11-27T15:05:51Z",
       "valid_from": null,
       "valid_until": null,
@@ -362,13 +365,14 @@
           "flash-20261127-1500-target",
           "flash-20261127-1500-time"
         ]
-      }
+      },
+      "disabled_reason": "on_done of flash-20261127-1500-target"
     },
     {
       "pair": "XBTEUR",
       "kind": "action",
       "trade": "sell_all",
-      "status": "armed",
+      "status": "disabled",
       "armed_at": "2026-11-27T15:05:51Z",
       "valid_from": null,
       "valid_until": null,
@@ -385,7 +389,8 @@
           "flash-20261127-1500-target",
           "flash-20261127-1500-stop"
         ]
-      }
+      },
+      "disabled_reason": "on_done of flash-20261127-1500-target"
     }
   ]
 }

@@ -6,21 +6,10 @@
     "long_only": true,
     "stop_loss_orders": false
   },
-  "balance_usd": 1008.29,
+  "balance_usd": 1015.95,
   "balance_basis": "cost basis; equity varies with the open position",
-  "cash_usd": 528.29,
-  "positions": [
-    {
-      "id": "trade-6",
-      "asset": "BTC",
-      "side": "long",
-      "size_usd": 480.0,
-      "entry_usd": 58992.0,
-      "qty_btc": 0.0081367,
-      "opened_at": "2026-11-27T15:05:51Z",
-      "entry_eur_approx": 53907
-    }
-  ],
+  "cash_usd": 1015.95,
+  "positions": [],
   "closed_trades": [
     {
       "id": "trade-1",
@@ -64,9 +53,17 @@
       "exit_usd": 60057.0,
       "corrected_at": "2026-11-25T10:47:32Z",
       "correction": "Nuno: the sale was at $60,057, not $50,057 (typo in the /sold report)"
+    },
+    {
+      "id": "trade-6",
+      "asset": "BTC",
+      "size_usd": 480.0,
+      "opened_at": "2026-11-27T15:05:51Z",
+      "closed_at": "2026-11-27T16:05:47Z",
+      "result_usd": 7.66
     }
   ],
-  "last_confirmed_at": "2026-11-27T15:05:51Z",
+  "last_confirmed_at": "2026-11-27T16:05:47Z",
   "last_confirmed_via": "telegram",
-  "last_confirmed_text": "/bought 480 at 58992"
+  "last_confirmed_text": "/sold all at 59934"
 }
