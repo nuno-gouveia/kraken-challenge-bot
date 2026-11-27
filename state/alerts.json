@@ -291,7 +291,7 @@
       "kind": "action",
       "trade": "buy",
       "message": "BUY $470 of BTC at market now (flash dip).",
-      "status": "fired",
+      "status": "done",
       "armed_at": "2026-11-27T15:00:46Z",
       "fired_at": "2026-11-27T15:00:46Z",
       "fired_source": "kraken",
@@ -310,7 +310,79 @@
         "stop": 0.04,
         "hold_h": 24,
         "act_within_min": 15,
-        "risk_usd": 20
+        "risk_usd": 20,
+        "entry_eur": 53906.6
+      },
+      "done_at": "2026-11-27T15:05:51Z",
+      "done_via": "telegram report"
+    },
+    {
+      "pair": "XBTEUR",
+      "kind": "action",
+      "trade": "sell_all",
+      "status": "armed",
+      "armed_at": "2026-11-27T15:05:51Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "flash_exit_of": "flash-20261127-1500",
+      "id": "flash-20261127-1500-target",
+      "direction": "above",
+      "level": 54950.0,
+      "level_usd_ref": 60144,
+      "message": "SELL ALL your BTC at market now: the flash-dip target (+2%) is reached.",
+      "on_done": {
+        "arm": [],
+        "disarm": [
+          "flash-20261127-1500-stop",
+          "flash-20261127-1500-time"
+        ]
+      }
+    },
+    {
+      "pair": "XBTEUR",
+      "kind": "action",
+      "trade": "sell_all",
+      "status": "armed",
+      "armed_at": "2026-11-27T15:05:51Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "flash_exit_of": "flash-20261127-1500",
+      "id": "flash-20261127-1500-stop",
+      "direction": "below",
+      "level": 51800.0,
+      "level_usd_ref": 56697,
+      "message": "SELL ALL your BTC at market now: the flash-dip exit (-4%) is hit.",
+      "on_done": {
+        "arm": [],
+        "disarm": [
+          "flash-20261127-1500-target",
+          "flash-20261127-1500-time"
+        ]
+      }
+    },
+    {
+      "pair": "XBTEUR",
+      "kind": "action",
+      "trade": "sell_all",
+      "status": "armed",
+      "armed_at": "2026-11-27T15:05:51Z",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "flash_exit_of": "flash-20261127-1500",
+      "id": "flash-20261127-1500-time",
+      "direction": "time",
+      "level": null,
+      "at": "2026-11-28T15:05:51Z",
+      "message": "SELL ALL your BTC at market now: 24 hours since the flash-dip buy.",
+      "on_done": {
+        "arm": [],
+        "disarm": [
+          "flash-20261127-1500-target",
+          "flash-20261127-1500-stop"
+        ]
       }
     }
   ]

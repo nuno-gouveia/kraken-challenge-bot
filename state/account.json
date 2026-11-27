@@ -8,8 +8,19 @@
   },
   "balance_usd": 1008.29,
   "balance_basis": "cost basis; equity varies with the open position",
-  "cash_usd": 1008.29,
-  "positions": [],
+  "cash_usd": 528.29,
+  "positions": [
+    {
+      "id": "trade-6",
+      "asset": "BTC",
+      "side": "long",
+      "size_usd": 480.0,
+      "entry_usd": 58992.0,
+      "qty_btc": 0.0081367,
+      "opened_at": "2026-11-27T15:05:51Z",
+      "entry_eur_approx": 53907
+    }
+  ],
   "closed_trades": [
     {
       "id": "trade-1",
@@ -55,7 +66,7 @@
       "correction": "Nuno: the sale was at $60,057, not $50,057 (typo in the /sold report)"
     }
   ],
-  "last_confirmed_at": "2026-11-25T10:47:32Z",
-  "last_confirmed_via": "claude (correction stated by Nuno)",
-  "last_confirmed_text": "sold all at 60057$ (corrects /sold all at 50057$)"
+  "last_confirmed_at": "2026-11-27T15:05:51Z",
+  "last_confirmed_via": "telegram",
+  "last_confirmed_text": "/bought 480 at 58992"
 }
