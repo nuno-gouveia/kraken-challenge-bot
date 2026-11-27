@@ -281,6 +281,37 @@
       "done_at": "2026-11-24T18:10:50Z",
       "done_via": "button",
       "awaiting_fill": false
+    },
+    {
+      "id": "flash-20261127-1500",
+      "pair": "XBTEUR",
+      "direction": "time",
+      "at": "2026-11-27T15:00:46Z",
+      "level": null,
+      "kind": "action",
+      "trade": "buy",
+      "message": "BUY $470 of BTC at market now (flash dip).",
+      "status": "fired",
+      "armed_at": "2026-11-27T15:00:46Z",
+      "fired_at": "2026-11-27T15:00:46Z",
+      "fired_source": "kraken",
+      "valid_from": null,
+      "valid_until": null,
+      "guard_band": null,
+      "on_done": null,
+      "flash": {
+        "high_eur": 56379.2,
+        "high_at": "2026-11-27T09:38:00Z",
+        "signal_eur": 53861.3,
+        "fall": 0.0447,
+        "size_usd": 470.0,
+        "eur_usd": 1.09453,
+        "target": 0.02,
+        "stop": 0.04,
+        "hold_h": 24,
+        "act_within_min": 15,
+        "risk_usd": 20
+      }
     }
   ]
 }
