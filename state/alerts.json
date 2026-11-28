@@ -1,8 +1,8 @@
 {
-  "updated_at": "2026-11-27T08:13:44Z",
+  "updated_at": "2026-11-28T08:25:00Z",
   "updated_by": "claude (daily brief)",
-  "eur_usd": 1.09667,
-  "note": "No position, no Telegram report since 24 Nov. No alert changed; only the flash dip is live, sized to $470 at a balance of $1,008.29.",
+  "eur_usd": 1.09291,
+  "note": "No position. Trade 6 (flash 27 Nov) closed at the target, +$7.66. Dropped the spent 20 Nov flash alerts (older than 7 days). Only the flash dip is live, sized to $530 at a balance of $1,015.95.",
   "alerts": [
     {
       "id": "btc-watch-low",
@@ -54,119 +54,6 @@
       "on_done": null,
       "fired_at": "2026-10-07T02:01:33Z",
       "fired_source": "kraken"
-    },
-    {
-      "id": "flash-20261120-1545",
-      "pair": "XBTEUR",
-      "direction": "time",
-      "at": "2026-11-20T15:45:47Z",
-      "level": null,
-      "kind": "action",
-      "trade": "buy",
-      "message": "BUY $810 of BTC at market now (flash dip).",
-      "status": "done",
-      "armed_at": "2026-11-20T15:45:47Z",
-      "fired_at": "2026-11-20T15:45:47Z",
-      "fired_source": "kraken",
-      "valid_from": null,
-      "valid_until": null,
-      "guard_band": null,
-      "on_done": null,
-      "flash": {
-        "high_eur": 56828.1,
-        "high_at": "2026-11-20T10:36:00Z",
-        "signal_eur": 54344.0,
-        "fall": 0.0437,
-        "size_usd": 810.0,
-        "eur_usd": 1.09908,
-        "target": 0.02,
-        "stop": 0.04,
-        "hold_h": 24,
-        "act_within_min": 15,
-        "risk_usd": 35,
-        "entry_eur": 54241.3
-      },
-      "done_at": "2026-11-20T15:50:49Z",
-      "done_via": "telegram report"
-    },
-    {
-      "pair": "XBTEUR",
-      "kind": "action",
-      "trade": "sell_all",
-      "status": "disabled",
-      "armed_at": "2026-11-20T15:50:49Z",
-      "valid_from": null,
-      "valid_until": null,
-      "guard_band": null,
-      "flash_exit_of": "flash-20261120-1545",
-      "id": "flash-20261120-1545-target",
-      "direction": "above",
-      "level": 55300.0,
-      "level_usd_ref": 60779,
-      "message": "SELL ALL your BTC at market now: the flash-dip target (+2%) is reached.",
-      "on_done": {
-        "arm": [],
-        "disarm": [
-          "flash-20261120-1545-stop",
-          "flash-20261120-1545-time"
-        ]
-      },
-      "disabled_reason": "on_done of flash-20261120-1545-stop"
-    },
-    {
-      "pair": "XBTEUR",
-      "kind": "action",
-      "trade": "sell_all",
-      "status": "done",
-      "armed_at": "2026-11-21T06:30:00Z",
-      "valid_from": null,
-      "valid_until": null,
-      "guard_band": null,
-      "flash_exit_of": "flash-20261120-1545",
-      "id": "flash-20261120-1545-stop",
-      "direction": "below",
-      "level": 52100.0,
-      "level_usd_ref": 57262,
-      "message": "SELL ALL your BTC at market now: the flash-dip exit (-4%) is hit.",
-      "on_done": {
-        "arm": [],
-        "disarm": [
-          "flash-20261120-1545-target",
-          "flash-20261120-1545-time"
-        ]
-      },
-      "held_overnight": {
-        "first_touch_at": "2026-11-21T03:32:00Z",
-        "rechecked_at": "2026-11-21T06:30:00Z"
-      },
-      "fired_at": "2026-11-21T06:30:48Z",
-      "fired_source": "kraken",
-      "done_at": "2026-11-21T08:25:47Z",
-      "done_via": "telegram report"
-    },
-    {
-      "pair": "XBTEUR",
-      "kind": "action",
-      "trade": "sell_all",
-      "status": "disabled",
-      "armed_at": "2026-11-20T15:50:49Z",
-      "valid_from": null,
-      "valid_until": null,
-      "guard_band": null,
-      "flash_exit_of": "flash-20261120-1545",
-      "id": "flash-20261120-1545-time",
-      "direction": "time",
-      "level": null,
-      "at": "2026-11-21T15:50:49Z",
-      "message": "SELL ALL your BTC at market now: 24 hours since the flash-dip buy.",
-      "on_done": {
-        "arm": [],
-        "disarm": [
-          "flash-20261120-1545-target",
-          "flash-20261120-1545-stop"
-        ]
-      },
-      "disabled_reason": "on_done of flash-20261120-1545-stop"
     },
     {
       "id": "flash-20261123-1745",
